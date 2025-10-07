@@ -1,3 +1,6 @@
+import datetime
+from pathlib import Path
+
 from fastapi import FastAPI, Request
 from starlette.responses import HTMLResponse
 from starlette.templating import Jinja2Templates
@@ -7,10 +10,10 @@ from fairy.llm.generator import generate
 app = FastAPI()
 
 
-templates = Jinja2Templates(directory="frontend")
+templates = Jinja2Templates(directory=Path(__file__).parent.parent / "frontend")
 
 
-@app.get("/api/generate")
+@app.post("/api/generate")
 async def api_generate():
     return {"message": generate("hello")}
 
@@ -19,6 +22,6 @@ async def api_generate():
 async def root(request: Request):
     return templates.TemplateResponse(
         "index.html",  # správný pořádek parametrů
-        {"request": request}
+        {"request": request, "timestamp": datetime.datetime.utcnow()}
     )
 
