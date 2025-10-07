@@ -32,14 +32,14 @@
       const prompt = document.getElementById("prompt").value;
       const storyDiv = document.getElementById("story");
 
-      // 🪄 Zobrazíme loading hlášku
+
       storyDiv.innerHTML = `<span id="loading">✨ Kouzlíme pohádku...</span>`;
 
       try {
         const res = await fetch("http://localhost:8000/?prompt=" + encodeURIComponent(prompt));
         const data = await res.json();
 
-        // ✨ Až přijde odpověď, zobrazíme ji
+
         storyDiv.textContent = data.message;
       } catch (err) {
         storyDiv.innerHTML = "❌ Nepodařilo se načíst pohádku. Zkontroluj backend.";
