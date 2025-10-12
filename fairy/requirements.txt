@@ -1,0 +1,11 @@
+fastapi
+starlette.responses
+starlette.templating
+fairy.llm.generator
+uvicorn
+fairy.server.app
+functools
+pathlib
+openai
+sqlitedict
+datetime
