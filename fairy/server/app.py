@@ -1,7 +1,6 @@
 from fastapi import FastAPI, Request
 from starlette.responses import HTMLResponse
 from starlette.templating import Jinja2Templates
-
 from fairy.llm.generator import generate
 
 app = FastAPI()
@@ -18,7 +17,7 @@ async def api_generate():
 @app.get("/", response_class=HTMLResponse)
 async def root(request: Request):
     return templates.TemplateResponse(
-        "index.html",  # správný pořádek parametrů
+        "step1.html",
         {"request": request}
     )
 

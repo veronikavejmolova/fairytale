@@ -9,3 +9,4 @@ pathlib
 openai
 sqlitedict
 datetime
+python-multipart
