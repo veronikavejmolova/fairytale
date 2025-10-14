@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <title>Krok 2 – Hlavní postava</title>
+</head>
+<body>
+  <h1>🧚‍♂️ Generátor pohádek</h1>
+
+  <form action="/step3" method="post">
+    <input type="hidden" name="theme" value="{{ theme }}" />
+
+    <label for="character">Hlavní postava:</label>
+    <input type="text" id="character" name="character" placeholder="Např. princ Jake" required />
+
+    <button type="submit">Další</button>
+  </form>
+</body>
+</html>
+

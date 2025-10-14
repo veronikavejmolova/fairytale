@@ -18,7 +18,7 @@ async def api_generate():
 @app.get("/", response_class=HTMLResponse)
 async def root(request: Request):
     return templates.TemplateResponse(
-        "index.html",  # správný pořádek parametrů
+        "step1.html",  # správný pořádek parametrů
         {"request": request}
     )
 
