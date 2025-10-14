@@ -7,5 +7,5 @@ services:
     ports:
       - "8000:8000"
     env_file:
-      - fairy/.env
+      - .env
     restart: unless-stopped
