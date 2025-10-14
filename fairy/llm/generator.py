@@ -1,8 +1,18 @@
-def generate(prompt: str):
-    return """<p>Příběh vypráví o dívce přezdívané <strong>Červená Karkulka</strong>, podle karkulky (karkule byla druh čepce), kterou stále nosí. V některých verzích jde o kapuci nebo kápi. Dívka jde lesem za svou babičkou, které nese něco k jídlu.</p>
+from fairy.llm.llm_calling import call_llm
 
-<p>Vlk chce dívku sežrat, ale bojí se to udělat přímo v lese (v některých verzích přihlížejí setkání dřevorubci). Dá se proto s dívkou do řeči a ta mu naivně prozradí, kam má namířeno. Navrhne jí tedy, aby nasbírala kytici květin, což udělá. Mezitím vlk přiběhne k domu babičky, předstírá, že je Karkulka a vloudí se dovnitř. Babičku sežere, oblékne se do jejích šatů a čeká na dívku. Když Karkulka přijde, sežere ji také. Poté přichází dřevorubec, rozřízne vlkovi břicho a babičku s Karkulkou, obě zcela v pořádku, zachrání. Poté naplní vlkovo břicho kameny, takže má vlk po probuzení těžké břicho a když se chce u studny napít, kameny ho převáží a on se utopí. Podle jiných verzí příběhu vlk babičku nesežere, ale zavře ji do komory, v některých je zase Karkulka zachráněna dřevorubcem ještě před sežráním.</p>
+def generate(tema_pohadky: str) -> str:
 
-<p>Příběh vytváří jasný kontrast mezi bezpečným světem vesnice a nebezpečným temným lesem, což je pojetí v zásadě středověké, ačkoliv nejsou známé žádné tak staré verze. Zřejmý je také morální důraz – jak je důležité nesejít ze stezky.</p>
+    final_prompt = f"""
+    Napiš mi poučnou větu o jedenácti slovech, na toto téma: "{tema_pohadky}".
+    Odpověď vrať jako HTML text."
+    """
 
-<p>Motiv vlka, který svou kořist spolkne, ale ta pak vyvázne z jeho břicha nezraněna, se objevuje také v ruském příběhu <em>Petr a vlk</em> a v dalším příběhu bratří Grimmů <em>O vlku a sedmi kůzlátkách</em>, v podstatě jde o téma staré nejméně jako Jonáš a velryba.</p>"""
+    vygenerovany_pribeh_html = call_llm(final_prompt.strip())
+
+    return vygenerovany_pribeh_html
+
+if __name__ == '__main__':
+    tema = "o veverce, která se bála výšek"
+    pohadka = generate(tema)
+    print("Vygenerovaná pohádka:")
+    print(pohadka)
