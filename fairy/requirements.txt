@@ -1,12 +1,7 @@
 fastapi
-starlette.responses
-starlette.templating
-fairy.llm.generator
+fastapi-jinja
 uvicorn
-fairy.server.app
-functools
-pathlib
 openai
 sqlitedict
-datetime
 python-multipart
+python-dotenv
