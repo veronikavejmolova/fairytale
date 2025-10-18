@@ -6,7 +6,15 @@
 </head>
 <body>
   <h1>🧚‍♂️ Tvoje pohádka</h1>
-  <div>{{ story }}</div>
+  <div>
+      Téma: {{ theme }} <br>
+      Hlavní postava: {{ character }} <br>
+      Ponaučení: {{ moral }} <br>
+      Další nápady / popis: {{ prompt }} <br>
+  </div>
+  <div>
+      <h2> Tvá vygenerovaná pohádka: </h2>
+      {{ story }}</div>
   <a href="/">🔄 Vytvořit novou pohádku</a>
 </body>
 </html>

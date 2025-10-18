@@ -35,7 +35,13 @@ async def generate_story(
 ):
     prompt_text = f"Napiš pohádku, téma: {theme}, postava: {character}, ponaučení: {moral}, další: {prompt}"
     story = generate(prompt_text)
-    return templates.TemplateResponse("result.html", {"request": request, "story": story})
+    return templates.TemplateResponse("result.html", {
+        "request": request,
+        "theme": theme,
+        "character": character,
+        "moral": moral,
+        "prompt": prompt,
+        "story": story})
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
