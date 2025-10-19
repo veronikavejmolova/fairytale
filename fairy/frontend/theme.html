@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <title>Krok 1 – Téma pohádky</title>
+</head>
+<body>
+  <h1>🧚‍♂️ Generátor pohádek</h1>
+
+  <form action="/character" method="post">
+  <label for="theme">Téma pohádky:</label>
+  <input type="text" id="theme" name="theme" required />
+
+  <button type="submit">Další</button>
+  <button type="button" id="fillBtn">Předvyplnit</button>
+</form>
+
+  <script>
+  const fillBtn = document.getElementById("fillBtn");
+  const themeInput = document.getElementById("theme");
+
+  fillBtn.addEventListener("click", () => {
+    themeInput.value = "spiknutí koček proti lidem";
+  });
+</script>
+
+</body>
+</html>
+
