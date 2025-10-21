@@ -11,7 +11,7 @@ load_dotenv(Path(__file__).parent.parent.parent / ".env")
 client = OpenAI()
 db = SqliteDict(Path(__file__).parent.parent.parent / "llm_cache.sqlite", autocommit=True)
 
-@lru_cache(maxsize=None)
+
 def call_llm(prompt: str) -> str:
     if prompt in db:
         return db[prompt]

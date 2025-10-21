@@ -3,7 +3,7 @@ from fairy.llm.llm_calling import call_llm
 def generate(tema_pohadky: str) -> str:
 
     final_prompt = f"""
-    Napiš mi poučnou větu o jedenácti slovech, na toto téma: "{tema_pohadky}".
+    Napiš mi poučnou větu o 100 slovech, na toto téma: "{tema_pohadky}".
     Odpověď vrať jako text."
     """
 
