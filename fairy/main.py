@@ -44,4 +44,4 @@ async def generate_story(
     return templates.TemplateResponse("result.html", {"request": request, "story": story})
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8001)
+    uvicorn.run(app, host="0.0.0.0", port=8000)
