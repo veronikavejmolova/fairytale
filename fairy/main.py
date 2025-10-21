@@ -2,6 +2,7 @@ from fastapi import FastAPI, Request, Form
 from fastapi.responses import HTMLResponse
 from starlette.templating import Jinja2Templates
 from fairy.llm.generator import generate
+from fairy.llm.theme_filter import is_theme_appropriate
 import uvicorn
 from pathlib import Path
 
@@ -17,6 +18,11 @@ async def step1(request: Request):
 # Step 2: character
 @app.post("/step2", response_class=HTMLResponse)
 async def step2(request: Request, theme: str = Form(...)):
+    # Ověření vhodnosti tématu
+    if not is_theme_appropriate(theme):
+        return templates.TemplateResponse("error.html",{"request": request, "theme": theme})
+
+    # Pokud téma prošlo, pokračujeme dál
     return templates.TemplateResponse("step2.html", {"request": request, "theme": theme})
 
 # Step 3: moral
