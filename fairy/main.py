@@ -11,13 +11,13 @@ TEMPLATES_DIR = Path(__file__).parent / "frontend"
 templates = Jinja2Templates(directory=TEMPLATES_DIR)
 
 # Step 1: theme
-@app.get("/", response_class=HTMLResponse)
-async def step1(request: Request):
-    return templates.TemplateResponse("step1.html", {"request": request})
+@app.get("/theme", response_class=HTMLResponse)
+async def theme(request: Request):
+    return templates.TemplateResponse("theme.html", {"request": request})
 
-# Step 2: character
-@app.post("/step2", response_class=HTMLResponse)
-async def step2(request: Request, theme: str = Form(...)):
+
+@app.post("/character", response_class=HTMLResponse)
+async def character(request: Request, theme: str = Form(...)):
     # Ověření vhodnosti tématu
     if not is_theme_appropriate(theme):
         return templates.TemplateResponse("error.html",{"request": request, "theme": theme})
@@ -25,10 +25,11 @@ async def step2(request: Request, theme: str = Form(...)):
     # Pokud téma prošlo, pokračujeme dál
     return templates.TemplateResponse("step2.html", {"request": request, "theme": theme})
 
+
 # Step 3: moral
-@app.post("/step3", response_class=HTMLResponse)
-async def step3(request: Request, theme: str = Form(...), character: str = Form(...)):
-    return templates.TemplateResponse("step3.html", {"request": request, "theme": theme, "character": character})
+@app.post("/moral", response_class=HTMLResponse)
+async def moral(request: Request, theme: str = Form(...), character: str = Form(...)):
+    return templates.TemplateResponse("moral.html", {"request": request, "theme": theme, "character": character})
 
 # Result 4: generate story
 @app.post("/generate", response_class=HTMLResponse)
