@@ -7,11 +7,13 @@ from starlette.templating import Jinja2Templates
 
 from fairy.llm.generator import generate
 from fairy.llm.theme_filter import is_theme_appropriate
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
 TEMPLATES_DIR = Path(__file__).parent.parent / "frontend"
 templates = Jinja2Templates(directory=TEMPLATES_DIR)
 
+app.mount("/static", StaticFiles(directory="frontend/static"), name="static")
 
 @app.get("/api/generate")
 async def api_generate():
