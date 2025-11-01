@@ -12,9 +12,35 @@
       Ponaučení: {{ moral }} <br>
       Další nápady / popis: {{ prompt }} <br>
   </div>
-  <div>
-      <h2> Tvá vygenerovaná pohádka: </h2>
-      {{ story }}</div>
-  <a href="/">🔄 Vytvořit novou pohádku</a>
+  <div id="story">{{ story }}</div>
+
+  <button id="copyBtn">📋 Zkopírovat pohádku</button>
+  <span id="copied" style="display:none;">✔ Zkopírováno!</span>
+
+  <button id="newStoryBtn">🔄 Vytvořit novou pohádku</button>
+
+  <script>
+    const copyBtn = document.getElementById("copyBtn");
+    const storyDiv = document.getElementById("story");
+    const copiedMsg = document.getElementById("copied");
+    const newStoryBtn = document.getElementById("newStoryBtn");
+
+    copyBtn.addEventListener("click", () => {
+      const textarea = document.createElement("textarea");
+      textarea.value = storyDiv.innerText;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textarea);
+
+      copiedMsg.style.display = "inline";
+      setTimeout(() => copiedMsg.style.display = "none", 1500);
+    });
+
+      newStoryBtn.addEventListener("click", () => {
+      window.location.href = "/theme";
+      });
+  </script>
 </body>
 </html>
+
