@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
+    <link rel="stylesheet" href="static/style.css">
   <meta charset="UTF-8" />
   <title>Výsledek pohádky</title>
 </head>
@@ -38,7 +39,7 @@
     });
 
       newStoryBtn.addEventListener("click", () => {
-      window.location.href = "/theme";
+      window.location.href = "{{ url_for('theme') }}";
       });
   </script>
 </body>

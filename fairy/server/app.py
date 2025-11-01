@@ -4,14 +4,19 @@ from pathlib import Path
 from fastapi import FastAPI, Request, Form
 from fastapi.responses import HTMLResponse
 from starlette.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
 
 from fairy.llm.generator import generate
 from fairy.llm.theme_filter import is_theme_appropriate
 
 app = FastAPI()
-TEMPLATES_DIR = Path(__file__).parent.parent / "frontend"
-templates = Jinja2Templates(directory=TEMPLATES_DIR)
+BASE_DIR = Path(__file__).resolve().parent.parent
+TEMPLATES_DIR = BASE_DIR / "frontend"
 
+templates = Jinja2Templates(directory=str(TEMPLATES_DIR))
+templates.env.globals['url_for'] = app.url_path_for
+
+app.mount("/static", StaticFiles(directory=str(TEMPLATES_DIR / "static")), name="static")
 
 @app.get("/api/generate")
 async def api_generate():
