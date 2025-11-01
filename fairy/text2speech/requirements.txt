@@ -1,0 +1,7 @@
+elevenlabs
+fastapi
+gunicorn
+python-dotenv
+python-multipart
+requests
+uvicorn
