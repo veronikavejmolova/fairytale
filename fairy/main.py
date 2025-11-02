@@ -4,6 +4,7 @@ from starlette.templating import Jinja2Templates
 from fairy.llm.generator import generate
 import uvicorn
 from pathlib import Path
+from fairy.text2speech.main import elevenlabs
 
 app = FastAPI()
 TEMPLATES_DIR = Path(__file__).parent / "frontend"

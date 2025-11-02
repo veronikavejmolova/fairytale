@@ -15,12 +15,14 @@ from fastapi.responses import HTMLResponse, JSONResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from starlette.responses import PlainTextResponse
 
-from tools.text2speech.config import (
-    ELEVEN_LABS_KEY,
-    ELEVEN_LABS_MODEL_ID,
-    ELEVEN_LABS_VOICE_ID,
+from fairy.text2speech.config import (
+    ELEVENLABS_API_KEY,
+    ELEVENLABS_MODEL_ID,
+    ELEVENLABS_VOICE_ID,
 )
-from tools.text_generation.main import ask_openai
+from fairy.llm.generator import generate
+#from tools.text_generation.main import ask_openai
+
 
 STATIC_DIR = Path(__file__).parent / "static"
 AUDIO_MIME_TYPE = "audio/mpeg"
@@ -84,7 +86,7 @@ async def render_tts_page(text: str) -> HTMLResponse:
     Render the result page for TTS.
     Triggers ElevenLabs audio generation in the background, shows a progress bar, and swaps in the player when ready.
     """
-    hash_input = f"{text}|{ELEVEN_LABS_VOICE_ID}|{ELEVEN_LABS_MODEL_ID}|0.5|0.5"
+    hash_input = f"{text}|{ELEVENLABS_VOICE_ID}|{ELEVENLABS_MODEL_ID}|0.5|0.5"
     cache_key = hashlib.sha256(hash_input.encode("utf-8")).hexdigest()
     text_cache_file = CACHE_DIR / f"{cache_key}.txt"
     if not text_cache_file.exists():
@@ -189,14 +191,14 @@ async def generate_audio(cache_key: str):
             print(f"[INFO] Audio already exists for {cache_key}")
             return PlainTextResponse("Audio already exists", status_code=200)
 
-        url = f"https://api.elevenlabs.io/v1/text-to-speech/{ELEVEN_LABS_VOICE_ID}"
+        url = f"https://api.elevenlabs.io/v1/text-to-speech/{ELEVENLABS_VOICE_ID}"
         headers = {
-            "xi-api-key": ELEVEN_LABS_KEY,
+            "xi-api-key": ELEVENLABS_API_KEY,
             "Content-Type": "application/json",
         }
         data = {
             "text": text,
-            "model_id": ELEVEN_LABS_MODEL_ID,
+            "model_id": ELEVENLABS_MODEL_ID,
             "voice_settings": {"stability": 0.5, "similarity_boost": 0.5},
         }
         print(f"[INFO] Sending TTS request for {cache_key} (text length: {len(text)})")
@@ -225,14 +227,14 @@ async def audio(cache_key: str):
         audio_fp = audio_cache_file.open("rb")
         return StreamingResponse(audio_fp, media_type=AUDIO_MIME_TYPE)
 
-    url = f"https://api.elevenlabs.io/v1/text-to-speech/{ELEVEN_LABS_VOICE_ID}"
+    url = f"https://api.elevenlabs.io/v1/text-to-speech/{ELEVENLABS_VOICE_ID}"
     headers = {
-        "xi-api-key": ELEVEN_LABS_KEY,
+        "xi-api-key": ELEVENLABS_API_KEY,
         "Content-Type": "application/json",
     }
     data = {
         "text": text,
-        "model_id": ELEVEN_LABS_MODEL_ID,
+        "model_id": ELEVENLABS_MODEL_ID,
         "voice_settings": {"stability": 0.5, "similarity_boost": 0.5},
     }
     async with httpx.AsyncClient(timeout=90.0) as client:

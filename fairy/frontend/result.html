@@ -12,9 +12,20 @@
       Ponaučení: {{ moral }} <br>
       Další nápady / popis: {{ prompt }} <br>
   </div>
-  <div>
-      <h2> Tvá vygenerovaná pohádka: </h2>
-      {{ story }}</div>
+  <h2> Tvá vygenerovaná pohádka: </h2>
+  <div id="tts-text">
+       {{ story }}</div>
   <a href="/">🔄 Vytvořit novou pohádku</a>
+
+
+<button id="speak-btn">Přečíst text</button>
+<script>
+  document.getElementById("speak-btn").addEventListener("click", function() {
+    const text = document.getElementById("tts-text").innerText;
+    const utterance = new SpeechSynthesisUtterance(text);
+    speechSynthesis.speak(utterance);
+  });
+</script>
+
 </body>
 </html>
