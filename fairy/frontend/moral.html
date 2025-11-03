@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <link rel="stylesheet" href="static/style.css">
+  <meta charset="UTF-8" />
+  <title>Krok 3 – Ponaučení</title>
+</head>
+<body>
+  <h1>🧚‍♂️ Generátor pohádek</h1>
+
+  <form action="/generate" method="post">
+    <input type="hidden" name="theme" value="{{ theme }}" />
+    <input type="hidden" name="character" value="{{ character }}" />
+
+  <label for="moral">Ponaučení:</label>
+  <input type="text" id="moral" name="moral" required />
+
+  <label for="prompt">Další nápady:</label>
+  <textarea id="prompt" name="prompt"></textarea>
+
+<button type="submit">Vygenerovat pohádku</button>
+<button id="fillBtn" type="button">Předvyplnit</button>
+
+</form>
+
+  <script>
+  const fillBtn = document.getElementById("fillBtn");
+  const moralInput = document.getElementById("moral");
+
+  fillBtn.addEventListener("click", () => {
+    moralInput.value = "zvířata jsou málo doceňována";
+  });
+</script>
+
+
+
+</body>
+</html>

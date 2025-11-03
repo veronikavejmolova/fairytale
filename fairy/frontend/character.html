@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <link rel="stylesheet" href="static/style.css">
+  <meta charset="UTF-8" />
+  <title>Krok 2 – Hlavní postava</title>
+</head>
+<body>
+  <h1>🧚‍♂️ Generátor pohádek</h1>
+
+  <form action="/moral" method="post">
+  <input type="hidden" id="theme" name="theme" value="{{ theme }}" />
+
+
+  <label for="character">Hlavní postava:</label>
+  <input type="text" id="character" name="character" required />
+
+  <button type="submit">Další</button>
+  <button id="fillBtn" type="button">Předvyplnit</button>
+</form>
+
+  <script>
+  const fillBtn = document.getElementById("fillBtn");
+  const characterInput = document.getElementById("character");
+
+  fillBtn.addEventListener("click", () => {
+    characterInput.value = "tlustá mourovatá kočka";
+  });
+</script>
+
+
+</body>
+</html>
+

@@ -1,31 +1,56 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
+    <link rel="stylesheet" href="static/style.css">
   <meta charset="UTF-8" />
   <title>Výsledek pohádky</title>
 </head>
 <body>
   <h1>🧚‍♂️ Tvoje pohádka</h1>
-  <div>
+  <div id="summary" >
       Téma: {{ theme }} <br>
       Hlavní postava: {{ character }} <br>
       Ponaučení: {{ moral }} <br>
       Další nápady / popis: {{ prompt }} <br>
   </div>
+
   <h2> Tvá vygenerovaná pohádka: </h2>
-  <div id="tts-text">
-       {{ story }}</div>
-  <a href="/">🔄 Vytvořit novou pohádku</a>
+  <div id="story" id="tts-text" >{{ story }}</div>
 
+  <button id="copyBtn">📋 Zkopírovat pohádku</button>
+  <span id="copied" style="display:none;">✔ Zkopírováno!</span>
+  <button id="speak-btn">Přečíst text</button>
 
-<button id="speak-btn">Přečíst text</button>
-<script>
-  document.getElementById("speak-btn").addEventListener("click", function() {
-    const text = document.getElementById("tts-text").innerText;
-    const utterance = new SpeechSynthesisUtterance(text);
-    speechSynthesis.speak(utterance);
-  });
-</script>
+  <button id="newStoryBtn">🔄 Vytvořit novou pohádku</button>
 
+  <script>
+    const copyBtn = document.getElementById("copyBtn");
+    const storyDiv = document.getElementById("story");
+    const copiedMsg = document.getElementById("copied");
+    const newStoryBtn = document.getElementById("newStoryBtn");
+
+    copyBtn.addEventListener("click", () => {
+      const textarea = document.createElement("textarea");
+      textarea.value = storyDiv.innerText;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textarea);
+
+      copiedMsg.style.display = "inline";
+      setTimeout(() => copiedMsg.style.display = "none", 1500);
+    });
+
+      newStoryBtn.addEventListener("click", () => {
+      window.location.href = "{{ url_for('theme') }}";
+      });
+    
+    document.getElementById("speak-btn").addEventListener("click", function() {
+      const text = document.getElementById("tts-text").innerText;
+      const utterance = new SpeechSynthesisUtterance(text);
+      speechSynthesis.speak(utterance);
+    })
+  </script>
 </body>
 </html>
+
