@@ -13,10 +13,13 @@
       Ponaučení: {{ moral }} <br>
       Další nápady / popis: {{ prompt }} <br>
   </div>
-  <div id="story">{{ story }}</div>
+
+  <h2> Tvá vygenerovaná pohádka: </h2>
+  <div id="story" id="tts-text" >{{ story }}</div>
 
   <button id="copyBtn">📋 Zkopírovat pohádku</button>
   <span id="copied" style="display:none;">✔ Zkopírováno!</span>
+  <button id="speak-btn">Přečíst text</button>
 
   <button id="newStoryBtn">🔄 Vytvořit novou pohádku</button>
 
@@ -41,6 +44,12 @@
       newStoryBtn.addEventListener("click", () => {
       window.location.href = "{{ url_for('theme') }}";
       });
+    
+    document.getElementById("speak-btn").addEventListener("click", function() {
+      const text = document.getElementById("tts-text").innerText;
+      const utterance = new SpeechSynthesisUtterance(text);
+      speechSynthesis.speak(utterance);
+    })
   </script>
 </body>
 </html>
