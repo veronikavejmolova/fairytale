@@ -1,6 +1,5 @@
 
 from pathlib import Path
-
 from fastapi import FastAPI, Request, Form
 from fastapi.responses import HTMLResponse
 from starlette.templating import Jinja2Templates
@@ -8,8 +7,10 @@ from fastapi.staticfiles import StaticFiles
 
 from fairy.llm.generator import generate
 from fairy.llm.theme_filter import is_theme_appropriate
+from fairy.text2speech.tts_server import router
 
 app = FastAPI()
+app.include_router(router)
 BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATES_DIR = BASE_DIR / "frontend"
 

@@ -1,10 +1,11 @@
 import hashlib
+import logging
 from io import BytesIO
 from pathlib import Path
 
 from starlette.templating import Jinja2Templates
 import httpx
-from fastapi import FastAPI, Query, Form, Request
+from fastapi import FastAPI, Query, Form, Request, APIRouter
 from fastapi.responses import HTMLResponse, JSONResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from starlette.responses import PlainTextResponse
@@ -17,7 +18,7 @@ from fairy.text2speech.config import (
     ELEVENLABS_VOICE_ID,
 )
 
-BASE_DIR = Path(__file__).resolve().parent
+BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATES_DIR = BASE_DIR / "frontend"
 STATIC_DIR = BASE_DIR.parent / "frontend" / "static"
 
@@ -27,24 +28,24 @@ CACHE_DIR.mkdir(exist_ok=True)
 
 templates = Jinja2Templates(directory=str(TEMPLATES_DIR))
 
-app = FastAPI()
-app.mount("/static", StaticFiles(directory=str(TEMPLATES_DIR / "static")), name="static")
+router = APIRouter()
 
 #sending story to tts
-@app.post("/tts", response_class=HTMLResponse)
+@router.post("/tts", response_class=HTMLResponse)
 async def tts_post(request: Request, text: str = Form(...)):
-    return await render_tts_page(request, text)
+    return render_tts_page(request, text)
 
-@app.get("/audio/{cache_key}/status")
+@router.get("/audio/{cache_key}/status")
 async def audio_status(cache_key: str):
     audio_cache_file = CACHE_DIR / f"{cache_key}.mp3"
+    logging.info(audio_cache_file.exists())
     return JSONResponse({"ready": audio_cache_file.exists()})
 
 
 
 
 
-async def render_tts_page(request: Request, story: str) -> HTMLResponse:
+def render_tts_page(request: Request, story: str) -> HTMLResponse:
     """
     Render the result page for TTS.
     Triggers ElevenLabs audio generation in the background, shows a progress bar, and swaps in the player when ready.
@@ -54,7 +55,10 @@ async def render_tts_page(request: Request, story: str) -> HTMLResponse:
     text_cache_file = CACHE_DIR / f"{cache_key}.txt"
     if not text_cache_file.exists():
         text_cache_file.write_text(story, encoding="utf-8")
-
+    logging.info(  {  "request": request,
+        "story": story,
+        "cache_key": cache_key,
+        "audio_mime": AUDIO_MIME_TYPE, "cache":text_cache_file.exists()})
     return templates.TemplateResponse(
         "tts.html",  # název šablony v TEMPLATES_DIR
         {
@@ -65,7 +69,7 @@ async def render_tts_page(request: Request, story: str) -> HTMLResponse:
         },
     )
 
-@app.post("/audio/{cache_key}/generate")
+@router.post("/audio/{cache_key}/generate")
 async def generate_audio(cache_key: str):
     try:
         text_cache_file = CACHE_DIR / f"{cache_key}.txt"
@@ -103,7 +107,7 @@ async def generate_audio(cache_key: str):
 
 
 
-@app.get("/audio/{cache_key}")
+@router.get("/audio/{cache_key}")
 async def audio(cache_key: str):
     text_cache_file = CACHE_DIR / f"{cache_key}.txt"
     if not text_cache_file.exists():
@@ -133,6 +137,3 @@ async def audio(cache_key: str):
         audio_bytesio = BytesIO(audio_bytes)
         return StreamingResponse(audio_bytesio, media_type=AUDIO_MIME_TYPE)
 
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run("tss_server:app", host="0.0.0.0", port=8001, reload=True)

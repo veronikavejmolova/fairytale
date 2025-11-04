@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="static/style.css">
+    <meta charset="UTF-8">
+    <title>Převod textu na řeč</title>
+</head>
+<body>
+<h1>🧚‍♂️ Tvoje pohádka</h1>
+<div id="summary">
+    Téma: {{ theme }} <br>
+    Hlavní postava: {{ character }} <br>
+    Ponaučení: {{ moral }} <br>
+    Další nápady / popis: {{ prompt }} <br>
+</div>
+
+<h2> Tvá vygenerovaná pohádka: </h2>
+<form id="tts-form" action="/tts" method="post">
+    <textarea name="text" id="story">{{ story }}</textarea>
+</form>
+
+<br>
+<div id="audio-placeholder">
+    <div id="progress-bar" style="width:60%;margin:auto;text-align:center;">
+        <span>⏳ Generuji audio...</span>
+        <div style="width:100%;background:#eee;height:18px;border-radius:12px;margin-top:12px;">
+            <div id="bar" style="width:10%;height:18px;background:#69f;border-radius:12px;transition:width 0.6s;"></div>
+        </div>
+    </div>
+</div>
+<button id="copyBtn">📋 Zkopírovat pohádku</button>
+<span id="copied" style="display:none;">✔ Zkopírováno!</span>
+<button id="newStoryBtn">🔄 Vytvořit novou pohádku</button>
+
+<script>
+    const copyBtn = document.getElementById("copyBtn");
+    const storyDiv = document.getElementById("story");
+    const copiedMsg = document.getElementById("copied");
+    const newStoryBtn = document.getElementById("newStoryBtn");
+
+    copyBtn.addEventListener("click", () => {
+        const textarea = document.createElement("textarea");
+        textarea.value = storyDiv.innerText;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+
+        copiedMsg.style.display = "inline";
+        setTimeout(() => copiedMsg.style.display = "none", 1500);
+    });
+
+    newStoryBtn.addEventListener("click", () => {
+        window.location.href = "{{ url_for('theme') }}";
+    });
+
+
+    // text to speech tss
+    const cacheKey = {{ cache_key | tojson }};
+    const audioMime = {{ audio_mime | tojson }};
+    const audioPlaceholder = document.getElementById('audio-placeholder');
+
+    let percent = 10;
+    const bar = document.getElementById('bar');
+
+    function progressFake() {
+        {
+            percent += 10 * Math.random();
+            if (percent > 99) percent = 99;
+            bar.style.width = percent + "%";
+            if (percent < 98) setTimeout(progressFake, 1000);
+        }
+    }
+
+    progressFake();
+
+    // Start background audio generation
+    console.log("Triggering audio generation for", cacheKey);
+    fetch(`/audio/${cacheKey}/generate`, {method: "POST"})
+        .then(resp => {
+            {
+                if (resp.ok) {
+                    {
+                        console.log("Audio generation request sent for", cacheKey);
+                    }
+                } else {
+                    {
+                        console.warn("Audio generation trigger failed:", resp.status);
+                    }
+                }
+            }
+        })
+        .catch(err => {
+            {
+                console.error("Error triggering audio generation:", err);
+            }
+        });
+
+    async function poll() {
+        {
+            console.log("Polling status for audio", cacheKey);
+            let resp = await fetch(`/audio/${cacheKey}/status`);
+            if (!resp.ok) {
+                console.warn("Status endpoint returned", resp.status);
+                setTimeout(poll, 2000);
+                return;
+            }
+            let data = await resp.json();
+            if (data.ready) {
+                console.log("Audio ready, swapping player in");
+                audioPlaceholder.innerHTML = `
+                <audio controls id="tts-audio" autoplay>
+                    <source src="/audio/${cacheKey}" type="${audioMime}">
+                    Váš prohlížeč nepodporuje audio element.
+                 </audio>`;
+                const audio = document.getElementById('tts-audio');
+                if (audio) {
+                    const playPromise = audio.play();
+                    if (playPromise !== undefined) {
+                        playPromise.catch(function () {
+                            // autoplay může být blokováno — čekáme na kliknutí uživatele
+                            document.body.addEventListener('click', function handler() {
+                                audio.play();
+                                document.body.removeEventListener('click', handler);
+                            });
+                        });
+                    }
+                }
+            } else {
+                setTimeout(poll, 2000);
+            }
+        }
+    }
+
+    poll();
+</script>
+</body>
+</html>
