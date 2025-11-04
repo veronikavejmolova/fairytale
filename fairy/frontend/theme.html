@@ -8,21 +8,25 @@
   <h1>🧚‍♂️ Generátor pohádek</h1>
 
   <form action="/character" method="post">
-  <label for="theme">Téma pohádky:</label>
-  <input type="text" id="theme" name="theme" required />
+      <label for="theme">Téma pohádky:</label>
+      <input type="text" id="theme" name="theme" required />
 
-  <button type="submit">Další</button>
-  <button type="button" id="fillBtn">Předvyplnit</button>
-</form>
+      <label for="age">Věk dítěte:</label>
+      <input type="range" id="age" name="age" min="3" max="13" value="6" oninput="ageValue.innerText = this.value">
+      <span id="ageValue">6</span> let
+
+      <button type="submit">Další</button>
+      <button type="button" id="fillBtn">Předvyplnit</button>
+  </form>
 
   <script>
-  const fillBtn = document.getElementById("fillBtn");
-  const themeInput = document.getElementById("theme");
+      const fillBtn = document.getElementById("fillBtn");
+      const themeInput = document.getElementById("theme");
 
-  fillBtn.addEventListener("click", () => {
-    themeInput.value = "spiknutí koček proti lidem";
-  });
-</script>
+      fillBtn.addEventListener("click", () => {
+        themeInput.value = "spiknutí koček proti lidem";
+      });
+  </script>
 
 </body>
 </html>

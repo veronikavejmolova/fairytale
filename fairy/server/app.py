@@ -23,22 +23,22 @@ async def theme(request: Request):
 
 
 @app.post("/character", response_class=HTMLResponse)
-async def character(request: Request, background_tasks: BackgroundTasks, theme: str = Form(...)):
+async def character(request: Request, background_tasks: BackgroundTasks, theme: str = Form(...), age: int = Form(...)):
     if not quick_theme_check(theme):
-        return templates.TemplateResponse("error.html",{"request": request, "theme": theme})
+        return templates.TemplateResponse("error.html",{"request": request, "theme": theme,  "age": age})
 
     background_tasks.add_task(async_llm_check, theme)
 
-    return templates.TemplateResponse("character.html", {"request": request, "theme": theme})
+    return templates.TemplateResponse("character.html", {"request": request, "theme": theme, "age": age})
 
 
 @app.post("/moral", response_class=HTMLResponse)
-async def moral(request: Request, theme: str = Form(...), character: str = Form(...)):
+async def moral(request: Request, theme: str = Form(...), character: str = Form(...), age: int = Form(...)):
     cached = get_cached_theme_result(theme)
     if cached == "nevhodné":
-        return templates.TemplateResponse("error.html", {"request": request, "theme": theme})
+        return templates.TemplateResponse("error.html", {"request": request, "theme": theme,  "age": age})
 
-    return templates.TemplateResponse("moral.html", {"request": request, "theme": theme, "character": character})
+    return templates.TemplateResponse("moral.html", {"request": request, "theme": theme, "character": character,  "age": age})
 
 
 @app.post("/generate", response_class=HTMLResponse)
@@ -47,14 +47,17 @@ async def generate_story(
     theme: str = Form(...),
     character: str = Form(...),
     moral: str = Form(...),
-    prompt: str = Form("")
-):
-    prompt_text = f"Napiš pohádku, téma: {theme}, postava: {character}, ponaučení: {moral}, další: {prompt}"
+    age: int = Form(...),
+    prompt: str = Form("")):
+
+    prompt_text = f"Napiš pohádku pro dítě ve věku {age} let. Téma: {theme}. Hlavní postava: {character}. Ponaučení: {moral}. Další: {prompt}."
     story = generate(prompt_text)
-    return templates.TemplateResponse("result.html", {
+    return templates.TemplateResponse("result.html",{
         "request": request,
         "theme": theme,
         "character": character,
         "moral": moral,
         "prompt": prompt,
-        "story": story})
+        "story": story,
+        "age": age
+    })
