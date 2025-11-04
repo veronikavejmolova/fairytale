@@ -1,12 +1,11 @@
 
 from pathlib import Path
-
-from fastapi import FastAPI, Request, Form
+from fastapi import FastAPI, Request, Form, BackgroundTasks
 from fastapi.responses import HTMLResponse
 from starlette.templating import Jinja2Templates
 
 from fairy.llm.generator import generate
-from fairy.llm.theme_filter import is_theme_appropriate
+from fairy.llm.theme_filter import quick_theme_check, async_llm_check, get_cached_theme_result
 
 app = FastAPI()
 TEMPLATES_DIR = Path(__file__).parent.parent / "frontend"
@@ -24,16 +23,21 @@ async def theme(request: Request):
 
 
 @app.post("/character", response_class=HTMLResponse)
-async def character(request: Request, theme: str = Form(...)):
-    if not is_theme_appropriate(theme):
+async def character(request: Request, background_tasks: BackgroundTasks, theme: str = Form(...)):
+    if not quick_theme_check(theme):
         return templates.TemplateResponse("error.html",{"request": request, "theme": theme})
 
+    background_tasks.add_task(async_llm_check, theme)
 
     return templates.TemplateResponse("character.html", {"request": request, "theme": theme})
 
 
 @app.post("/moral", response_class=HTMLResponse)
 async def moral(request: Request, theme: str = Form(...), character: str = Form(...)):
+    cached = get_cached_theme_result(theme)
+    if cached == "nevhodné":
+        return templates.TemplateResponse("error.html", {"request": request, "theme": theme})
+
     return templates.TemplateResponse("moral.html", {"request": request, "theme": theme, "character": character})
 
 
