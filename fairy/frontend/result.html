@@ -1,20 +1,56 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
+    <link rel="stylesheet" href="static/style.css">
   <meta charset="UTF-8" />
   <title>Výsledek pohádky</title>
 </head>
 <body>
   <h1>🧚‍♂️ Tvoje pohádka</h1>
-  <div>
+  <div id="summary" >
       Téma: {{ theme }} <br>
       Hlavní postava: {{ character }} <br>
       Ponaučení: {{ moral }} <br>
       Další nápady / popis: {{ prompt }} <br>
   </div>
-  <div>
-      <h2> Tvá vygenerovaná pohádka: </h2>
-      {{ story }}</div>
-  <a href="/">🔄 Vytvořit novou pohádku</a>
+
+  <h2> Tvá vygenerovaná pohádka: </h2>
+  <form id="tts-form" action="/tts" method="post">
+      <textarea name="text" id="story">{{ story }}</textarea>
+      <button id="speak-btn" type="submit">🎧 Přehrát nahrávku</button>
+  </form>
+
+
+
+  <button id="copyBtn">📋 Zkopírovat pohádku</button>
+  <span id="copied" style="display:none;">✔ Zkopírováno!</span>
+  <button id="newStoryBtn">🔄 Vytvořit novou pohádku</button>
+
+  <script>
+      // musím sem doplnit get element by id - jako třeba to tss-form atd. pak mi to nejde na tts_serveru
+    const copyBtn = document.getElementById("copyBtn");
+    const storyDiv = document.getElementById("story");
+    const copiedMsg = document.getElementById("copied");
+    const newStoryBtn = document.getElementById("newStoryBtn");
+    const speakBtn = document.getElementById("speak-btn")
+
+    copyBtn.addEventListener("click", () => {
+      const textarea = document.createElement("textarea");
+      textarea.value = storyDiv.innerText;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textarea);
+
+      copiedMsg.style.display = "inline";
+      setTimeout(() => copiedMsg.style.display = "none", 1500);
+    });
+
+      newStoryBtn.addEventListener("click", () => {
+      window.location.href = "{{ url_for('theme') }}";
+
+});
+  </script>
 </body>
 </html>
+

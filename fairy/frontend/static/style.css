@@ -1,6 +1,7 @@
+
 body {
   font-family: 'Georgia', serif;
-  max-width: 600px;
+  max-width: 700px;
   margin: 2rem auto;
   padding: 1rem;
   background-color: #fafafa;
@@ -19,33 +20,58 @@ textarea {
   box-sizing: border-box;
 }
 
-button {
+
+button, a {
+  display: inline-block;
+  margin-top: 0.5rem;
   padding: 0.6rem 1.2rem;
-  cursor: pointer;
   border: none;
   border-radius: 6px;
-  background-color: #6b46c1;
+  background-color: #4caf50;
   color: white;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 1rem;
   font-weight: bold;
   transition: background-color 0.2s ease;
 }
 
-button:hover {
+button:hover, a:hover {
+  background-color: #45a049;
+}
+
+
+button.purple {
+  background-color: #6b46c1;
+}
+
+button.purple:hover {
   background-color: #553c9a;
 }
+
 
 #story {
   white-space: pre-wrap;
   margin-top: 1rem;
   min-height: 50px;
   padding: 1rem;
-  background-color: #fff;
-  border-radius: 6px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
   border: 1px solid #eee;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
+
 
 #loading {
   font-style: italic;
   color: #666;
 }
+
+
+#copied {
+  display: none;
+  color: green;
+  margin-left: 10px;
+  font-weight: bold;
+}
+
