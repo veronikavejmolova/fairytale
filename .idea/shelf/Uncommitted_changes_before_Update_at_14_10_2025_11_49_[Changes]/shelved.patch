@@ -1,0 +1,75 @@
+Index: fairy/llm/llm-calling.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from functools import lru_cache\r\nfrom pathlib import Path\r\n\r\nfrom dotenv import load_dotenv\r\nfrom openai import OpenAI, OpenAIError\r\nfrom sqlitedict import SqliteDict\r\n\r\nload_dotenv(Path(__file__).parent.parent / \".env\")\r\n\r\nclient = OpenAI()\r\ndb = SqliteDict(Path(__file__).parent.parent / \"llm_cache.sqlite\", autocommit=True)\r\n\r\n@lru_cache(maxsize=None)\r\n    def call_llm(prompt: str) -> str:\r\n        if prompt in db:\r\n            return db[prompt]\r\n\r\n        try:\r\n            resp = client.chat.completions.create(\r\n                model=\"gpt-4.1\",\r\n                messages=[\r\n                    {\"role\": \"user\", \"content\": prompt}\r\n                ],\r\n                temperature=0,  # lower temperature for more deterministic output\r\n                max_tokens=1024\r\n            )\r\n            result = resp.choices[0].message.content\r\n            db[prompt] = result\r\n            return result\r\n\r\n        except OpenAIError as e:\r\n            error_message = f\"Chyba při volání OpenAI API: {e}\"\r\n            print(error_message)\r\n            return error_message\r\n        except Exception as e:\r\n            error_message = f\"Nastala neočekávaná chyba: {e}\"\r\n            print(error_message)\r\n            return error_message\r\n\r\nif __name__ == '__main__':\r\n    import time\r\n    start = time.time()\r\n    print(call_llm(\"tell me hello in three words\"))\r\n    print(\"First call took\", time.time() - start)\r\n\r\nif __name__ == '__main__':\r\n    import time\r\n    start = time.time()\r\n    print(call_llm(\"Pověz mi krátký vtip o programátorovi.\"))\r\n    print(f\"První volání trvalo: {time.time() - start:.2f} s\")\r\n
+===================================================================
+diff --git a/fairy/llm/llm-calling.py b/fairy/llm/llm-calling.py
+--- a/fairy/llm/llm-calling.py	(revision 0e8bd4e6c050d0ca6cdbecb32a5bdf4ed86533c8)
++++ b/fairy/llm/llm-calling.py	(date 1760387699498)
+@@ -11,40 +11,39 @@
+ db = SqliteDict(Path(__file__).parent.parent / "llm_cache.sqlite", autocommit=True)
+ 
+ @lru_cache(maxsize=None)
+-    def call_llm(prompt: str) -> str:
+-        if prompt in db:
+-            return db[prompt]
++def call_llm(prompt: str) -> str:
++    if prompt in db:
++        return db[prompt]
+ 
+-        try:
+-            resp = client.chat.completions.create(
+-                model="gpt-4.1",
+-                messages=[
+-                    {"role": "user", "content": prompt}
+-                ],
+-                temperature=0,  # lower temperature for more deterministic output
+-                max_tokens=1024
+-            )
+-            result = resp.choices[0].message.content
+-            db[prompt] = result
+-            return result
++    try:
++        resp = client.chat.completions.create(
++            model="gpt-4.1",
++            messages=[
++                {"role": "user", "content": prompt}
++            ],
++            temperature=0,
++            max_tokens=1024
++        )
++        result = resp.choices[0].message.content
++        db[prompt] = result
++        return result
+ 
+-        except OpenAIError as e:
+-            error_message = f"Chyba při volání OpenAI API: {e}"
+-            print(error_message)
+-            return error_message
+-        except Exception as e:
+-            error_message = f"Nastala neočekávaná chyba: {e}"
+-            print(error_message)
+-            return error_message
++    except OpenAIError as e:
++        error_message = f"Chyba při volání OpenAI API: {e}"
++        print(error_message)
++        return error_message
++    except Exception as e:
++        error_message = f"Nastala neočekávaná chyba: {e}"
++        print(error_message)
++        return error_message
+ 
+ if __name__ == '__main__':
+     import time
++
+     start = time.time()
+     print(call_llm("tell me hello in three words"))
+     print("First call took", time.time() - start)
+ 
+-if __name__ == '__main__':
+-    import time
+     start = time.time()
+     print(call_llm("Pověz mi krátký vtip o programátorovi."))
+-    print(f"První volání trvalo: {time.time() - start:.2f} s")
++    print(f"Second call took: {time.time() - start:.2f} s")
+\ No newline at end of file

@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="c32681e8-0446-4c1b-a027-743076b7a95e" name="Changes" comment="WIP: age settings">
+      <change beforePath="$PROJECT_DIR$/fairy/frontend/character.html" beforeDir="false" afterPath="$PROJECT_DIR$/fairy/frontend/character.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fairy/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/fairy/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/llm_cache.sqlite" beforeDir="false" afterPath="$PROJECT_DIR$/llm_cache.sqlite" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+        <option value="HTML File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Merge.Settings">
+    <option name="BRANCH" value="origin/Age-setting" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main_2" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;Rybar1kVojtech&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/veronikavejmolova/fairytale.git&quot;,
+    &quot;accountId&quot;: &quot;5555cfe2-b0fe-4c84-bf4f-2b7b442a76fb&quot;
+  },
+  &quot;recentNewPullRequestHead&quot;: {
+    &quot;server&quot;: {
+      &quot;useHttp&quot;: false,
+      &quot;host&quot;: &quot;github.com&quot;,
+      &quot;port&quot;: null,
+      &quot;suffix&quot;: null
+    },
+    &quot;owner&quot;: &quot;veronikavejmolova&quot;,
+    &quot;repository&quot;: &quot;fairytale&quot;
+  }
+}</component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
+  <component name="ProjectId" id="33oo5zfzJ31KwEITHZOsboztniV" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultHtmlFileTemplate": "HTML File",
+    "JavaScript Debug.error.html.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Python.app.executor": "Run",
+    "Python.generator.executor": "Run",
+    "Python.llm-calling.executor": "Run",
+    "Python.main.executor": "Run",
+    "Python.openai_caller.executor": "Run",
+    "Python.theme_filter.executor": "Run",
+    "Python.topic_filter.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultAutoModeForALLUsers.v1": "true",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "#24 on Age-setting",
+    "junie.onboarding.icon.badge.shown": "true",
+    "last_opened_file_path": "C:/Users/Vojtěch Rybárik/PycharmProjects/fairytale/fairy",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "to.speed.mode.migration.done": "true",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Vojtěch Rybárik\PycharmProjects\fairytale\fairy" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="llm-calling" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="fairytale" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/fairy/llm" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/fairy/llm/llm-calling.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.llm-calling" />
+        <item itemvalue="Python.llm-calling" />
+        <item itemvalue="Python.llm-calling" />
+        <item itemvalue="Python.llm-calling" />
+        <item itemvalue="Python.llm-calling" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-3aa1da707db6-JavaScript-PY-252.26830.99" />
+        <option value="bundled-python-sdk-164cda30dcd9-0af03a5fa574-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-252.26830.99" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="c32681e8-0446-4c1b-a027-743076b7a95e" name="Changes" comment="" />
+      <created>1759992607753</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1759992607753</updated>
+      <workItem from="1759992609961" duration="413000" />
+      <workItem from="1760099576839" duration="1944000" />
+      <workItem from="1760104197907" duration="800000" />
+      <workItem from="1760109294002" duration="7219000" />
+      <workItem from="1760312140162" duration="18125000" />
+      <workItem from="1760434001922" duration="3566000" />
+      <workItem from="1760440444114" duration="1893000" />
+      <workItem from="1760468712623" duration="1201000" />
+      <workItem from="1760636564404" duration="1131000" />
+      <workItem from="1760868917807" duration="1198000" />
+      <workItem from="1760915597887" duration="5337000" />
+      <workItem from="1760983141139" duration="15135000" />
+      <workItem from="1761046591128" duration="987000" />
+      <workItem from="1761068887957" duration="990000" />
+      <workItem from="1761074732611" duration="264000" />
+      <workItem from="1761215614118" duration="631000" />
+      <workItem from="1761909754540" duration="13854000" />
+      <workItem from="1762254452101" duration="5279000" />
+      <workItem from="1762298779271" duration="3730000" />
+    </task>
+    <task id="LOCAL-00001" summary="LLm calling">
+      <option name="closed" value="true" />
+      <created>1760383324600</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1760383324600</updated>
+    </task>
+    <task id="LOCAL-00002" summary="theme filter">
+      <option name="closed" value="true" />
+      <created>1761036244958</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1761036244958</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Port fixed">
+      <option name="closed" value="true" />
+      <created>1761042494871</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1761042494872</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Async LLM theme filter">
+      <option name="closed" value="true" />
+      <created>1762249449856</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1762249449856</updated>
+    </task>
+    <task id="LOCAL-00005" summary="WIP: age settings">
+      <option name="closed" value="true" />
+      <created>1762253163411</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1762253163411</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="LLm calling" />
+    <MESSAGE value="theme filter" />
+    <MESSAGE value="Port fixed" />
+    <MESSAGE value="Async LLM theme filter" />
+    <MESSAGE value="WIP: age settings" />
+    <option name="LAST_COMMIT_MESSAGE" value="WIP: age settings" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/fairytale$app.coverage" NAME="app Coverage Results" MODIFIED="1762251795729" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/fairy/server" />
+    <SUITE FILE_PATH="coverage/fairytale$llm_calling.coverage" NAME="llm-calling Coverage Results" MODIFIED="1762302499299" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/fairy/llm" />
+    <SUITE FILE_PATH="coverage/fairytale$openai_caller.coverage" NAME="openai_caller Coverage Results" MODIFIED="1760122040605" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/fairy/llm" />
+    <SUITE FILE_PATH="coverage/fairytale$topic_filter.coverage" NAME="topic_filter Coverage Results" MODIFIED="1761034638603" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/fairy/llm" />
+    <SUITE FILE_PATH="coverage/fairytale$main.coverage" NAME="main Coverage Results" MODIFIED="1762302536298" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/fairy" />
+    <SUITE FILE_PATH="coverage/fairytale$generator.coverage" NAME="generator Coverage Results" MODIFIED="1760371716714" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/fairy/llm" />
+    <SUITE FILE_PATH="coverage/fairytale$theme_filter.coverage" NAME="theme_filter Coverage Results" MODIFIED="1762249148789" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/fairy/llm" />
+  </component>
+</project>
