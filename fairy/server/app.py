@@ -23,7 +23,7 @@ async def theme(request: Request):
 
 
 @app.post("/character", response_class=HTMLResponse)
-async def character(request: Request, background_tasks: BackgroundTasks, theme: str = Form(...), age: int = Form(...)):
+async def character(request: Request, background_tasks: BackgroundTasks, theme: str = Form(...), age: int | None = Form(None)):
     if not quick_theme_check(theme):
         return templates.TemplateResponse("error.html",{"request": request, "theme": theme,  "age": age})
 
@@ -33,7 +33,7 @@ async def character(request: Request, background_tasks: BackgroundTasks, theme: 
 
 
 @app.post("/moral", response_class=HTMLResponse)
-async def moral(request: Request, theme: str = Form(...), character: str = Form(...), age: int = Form(...)):
+async def moral(request: Request, theme: str = Form(...), character: str = Form(...), age: int | None = Form(None)):
     cached = get_cached_theme_result(theme)
     if cached == "nevhodné":
         return templates.TemplateResponse("error.html", {"request": request, "theme": theme,  "age": age})
