@@ -13,14 +13,17 @@ TEMPLATES_DIR = Path(__file__).parent.parent / "frontend"
 templates = Jinja2Templates(directory=TEMPLATES_DIR)
 
 
+
 @app.get("/api/generate")
 async def api_generate():
     return {"message": generate("hello")}
 
 
+
 @app.get("/", response_class=HTMLResponse)
 async def theme(request: Request):
     return templates.TemplateResponse("theme.html", {"request": request})
+
 
 
 @app.post("/character", response_class=HTMLResponse)
@@ -34,9 +37,49 @@ async def character(
             "error.html",
             {"request": request, "theme": theme, "length": length}
         )
+
     return templates.TemplateResponse(
         "character.html",
         {"request": request, "theme": theme, "length": length}
+    )
+
+
+
+@app.post("/additional_characters", response_class=HTMLResponse)
+async def additional_characters(
+    request: Request,
+    theme: str = Form(...),
+    character: str = Form(...),
+    length: str = Form(""),
+):
+    return templates.TemplateResponse(
+        "additional_characters.html",
+        {
+            "request": request,
+            "theme": theme,
+            "character": character,
+            "length": length
+        }
+    )
+
+
+@app.post("/supernatural", response_class=HTMLResponse)
+async def supernatural(
+    request: Request,
+    theme: str = Form(...),
+    character: str = Form(...),
+    length: str = Form(""),
+    other_characters: str = Form(""),
+):
+    return templates.TemplateResponse(
+        "supernatural.html",
+        {
+            "request": request,
+            "theme": theme,
+            "character": character,
+            "length": length,
+            "other_characters": other_characters
+        }
     )
 
 
@@ -45,11 +88,24 @@ async def moral(
     request: Request,
     theme: str = Form(...),
     character: str = Form(...),
-    length: str = Form("")
+    length: str = Form(""),
+    other_characters: str = Form(""),
+    supernatural_present: str = Form("no"),
+    super_types: str = Form(""),
+    super_tone: str = Form(""),
 ):
     return templates.TemplateResponse(
         "moral.html",
-        {"request": request, "theme": theme, "character": character, "length": length}
+        {
+            "request": request,
+            "theme": theme,
+            "character": character,
+            "length": length,
+            "other_characters": other_characters,
+            "supernatural_present": supernatural_present,
+            "super_types": super_types,
+            "super_tone": super_tone,
+        }
     )
 
 
@@ -59,20 +115,36 @@ async def generate_story(
     theme: str = Form(...),
     character: str = Form(...),
     moral: str = Form(...),
-    prompt: str = Form(""),
-    length: str = Form("")
+    length: str = Form(""),
+    other_characters: str = Form(""),
+    supernatural_present: str = Form("no"),
+    super_types: str = Form(""),
+    super_tone: str = Form(""),
 ):
-    prompt_text = f"Napiš {length}-verzi pohádky, téma: {theme}, postava: {character}, ponaučení: {moral}, další: {prompt}"
+    prompt_text = f"""
+    Téma: {theme}
+    Hlavní postava: {character}
+    Další postavy: {other_characters}
+    Nadpřirozené bytosti: {super_types if supernatural_present == 'yes' else 'ne'}
+    Role nadpřirozených bytostí: {super_tone}
+    Ponaučení: {moral}
+    Délka: {length}
+    """
+
     story = generate(prompt_text)
+
     return templates.TemplateResponse(
         "result.html",
         {
             "request": request,
+            "story": story,
             "theme": theme,
             "character": character,
             "moral": moral,
             "length": length,
-            "prompt": prompt,
-            "story": story
+            "other_characters": other_characters,
+            "supernatural_present": supernatural_present,
+            "super_types": super_types,
+            "super_tone": super_tone,
         }
     )

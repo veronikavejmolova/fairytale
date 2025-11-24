@@ -7,18 +7,31 @@
 <body>
   <h1>🧚‍♂️ Tvoje pohádka</h1>
 
-  <div id="story">{{ story }}</div>
+  <div id="tts-text">{{ story }}</div>
 
   <button id="copyBtn">📋 Zkopírovat pohádku</button>
   <span id="copied" style="display:none;">✔ Zkopírováno!</span>
 
+  <button id="speak-btn">🎧 Přečíst text</button>
+
   <button id="newStoryBtn">🔄 Vytvořit novou pohádku</button>
 
+  <form action="/generate" method="post" style="margin-top: 15px;">
+    <input type="hidden" name="theme" value="{{ theme }}">
+    <input type="hidden" name="character" value="{{ character }}">
+    <input type="hidden" name="moral" value="{{ moral }}">
+    <input type="hidden" name="prompt" value="{{ prompt }}">
+
+    <button type="submit" name="length" value="short">Krátká</button>
+    <button type="submit" name="length" value="medium">Střední</button>
+    <button type="submit" name="length" value="long">Dlouhá</button>
+  </form>
+
   <script>
+    // Kopírování textu
     const copyBtn = document.getElementById("copyBtn");
     const storyDiv = document.getElementById("story");
     const copiedMsg = document.getElementById("copied");
-    const newStoryBtn = document.getElementById("newStoryBtn");
 
     copyBtn.addEventListener("click", () => {
       const textarea = document.createElement("textarea");
@@ -32,9 +45,19 @@
       setTimeout(() => copiedMsg.style.display = "none", 1500);
     });
 
-      newStoryBtn.addEventListener("click", () => {
+
+    const newStoryBtn = document.getElementById("newStoryBtn");
+    newStoryBtn.addEventListener("click", () => {
       window.location.href = "/theme";
-      });
+    });
+
+
+    const speakBtn = document.getElementById("speak-btn");
+    const ttsText = document.getElementById("tts-text");
+    speakBtn.addEventListener("click", () => {
+      const utterance = new SpeechSynthesisUtterance(ttsText.innerText);
+      speechSynthesis.speak(utterance);
+    });
   </script>
 </body>
 </html>

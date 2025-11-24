@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <title>Krok 4 – Další postavy</title>
+</head>
+<body>
+  <h1>🧚‍♀️ Přidej další postavy</h1>
+
+  <p>Zde můžeš doplnit další postavy, které se objeví v pohádce (odděl čárkou nebo nový řádek).</p>
+
+  <form action="/supernatural" method="post">
+
+    <input type="hidden" name="theme" value="{{ theme }}">
+    <input type="hidden" name="character" value="{{ character }}">
+    <input type="hidden" name="length" value="{{ length }}">
+    <input type="hidden" name="moral" value="{{ moral }}">
+    <input type="hidden" name="prompt" value="{{ prompt }}">
+
+    <label for="other_characters">Další postavy:</label><br>
+    <textarea id="other_characters" name="other_characters" rows="4" placeholder="např. čaroděj, mluvící sova"></textarea><br><br>
+
+    <button type="submit">Další</button>
+    <button type="button" id="prefillChars">Předvyplnit</button>
+  </form>
+
+  <script>
+    document.getElementById("prefillChars").addEventListener("click", () => {
+      document.getElementById("other_characters").value =
+        "čaroděj, mluvící sova, starý lesní duch";
+    });
+  </script>
+</body>
+</html>
