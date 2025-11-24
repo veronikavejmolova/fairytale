@@ -29,17 +29,17 @@ async def theme(request: Request):
 
 
 @app.post("/character", response_class=HTMLResponse)
-async def character(request: Request, theme: str = Form(...)):
+async def character(request: Request, theme: str = Form(...), age: int | None = Form(None)):
     if not is_theme_appropriate(theme):
-        return templates.TemplateResponse("error.html",{"request": request, "theme": theme})
+        return templates.TemplateResponse("error.html",{"request": request, "theme": theme, "age": age})
 
 
-    return templates.TemplateResponse("character.html", {"request": request, "theme": theme})
+    return templates.TemplateResponse("character.html", {"request": request, "theme": theme, "age": age})
 
 
 @app.post("/moral", response_class=HTMLResponse)
-async def moral(request: Request, theme: str = Form(...), character: str = Form(...)):
-    return templates.TemplateResponse("moral.html", {"request": request, "theme": theme, "character": character})
+async def moral(request: Request, theme: str = Form(...), character: str = Form(...), age: int | None = Form(None)):
+    return templates.TemplateResponse("moral.html", {"request": request, "theme": theme, "character": character, "age": age})
 
 
 @app.post("/generate", response_class=HTMLResponse)
@@ -48,9 +48,10 @@ async def generate_story(
     theme: str = Form(...),
     character: str = Form(...),
     moral: str = Form(...),
+    age: int = Form(...),
     prompt: str = Form("")
 ):
-    prompt_text = f"Napiš pohádku, téma: {theme}, postava: {character}, ponaučení: {moral}, další: {prompt}"
+    prompt_text = f"Napiš pohádku pro dítě ve věku {age} podle následujících parametrů: téma: {theme}, postava: {character}, ponaučení: {moral}, další: {prompt}"
     story = generate(prompt_text)
     return templates.TemplateResponse("result.html", {
         "request": request,
@@ -58,4 +59,5 @@ async def generate_story(
         "character": character,
         "moral": moral,
         "prompt": prompt,
-        "story": story})
+        "story": story,
+        "age": age})

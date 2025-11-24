@@ -11,7 +11,11 @@
   <form action="/character" method="post">
   <label for="theme">Téma pohádky:</label>
   <input type="text" id="theme" name="theme" required />
+  <input type="hidden" name="age" value="{{ age }}">
 
+  <label for="age">Věk dítěte:</label>
+  <input type="range" id="age" name="age" min="3" max="13" value="6" oninput="ageValue.innerText = this.value">
+  <span id="ageValue">6</span> let
   <button type="submit">Další</button>
   <button type="button" id="fillBtn">Předvyplnit</button>
 </form>
