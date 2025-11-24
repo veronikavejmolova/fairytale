@@ -4,6 +4,7 @@
     <link rel="stylesheet" href="static/style.css">
   <meta charset="UTF-8" />
   <title>Výsledek pohádky</title>
+  <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
   <h1>🧚‍♂️ Tvoje pohádka</h1>
@@ -19,6 +20,10 @@
   <button id="copyBtn">📋 Zkopírovat pohádku</button>
   <span id="copied" style="display:none;">✔ Zkopírováno!</span>
 
+  <button id="playAudioBtn">🎧 Přehrát nahrávku</button>
+  <div id="loading" style="display:none;">Generuji hlas…</div>
+  <audio id="audioPlayer" controls style="display:none;"></audio>
+
   <button id="newStoryBtn">🔄 Vytvořit novou pohádku</button>
 
   <script>
@@ -26,6 +31,10 @@
     const storyDiv = document.getElementById("story");
     const copiedMsg = document.getElementById("copied");
     const newStoryBtn = document.getElementById("newStoryBtn");
+
+    const playBtn = document.getElementById("playAudioBtn");
+    const loading = document.getElementById("loading");
+    const audioPlayer = document.getElementById("audioPlayer");
 
     copyBtn.addEventListener("click", () => {
       const textarea = document.createElement("textarea");
@@ -42,6 +51,32 @@
       newStoryBtn.addEventListener("click", () => {
       window.location.href = "{{ url_for('theme') }}";
       });
+
+       playBtn.addEventListener("click", async () => {
+      loading.style.display = "block";
+      playBtn.disabled = true;
+
+      try {
+        const response = await fetch("/api/speak", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text: storyDiv.innerText, voice_id: "piwFF76q4v4xA9Wyxu1R" })
+        });
+
+        if (!response.ok) throw new Error("Chyba při generování hlasu");
+
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        audioPlayer.src = url;
+        audioPlayer.style.display = "block";
+        audioPlayer.play();
+      } catch (err) {
+        alert(err);
+      } finally {
+        loading.style.display = "none";
+        playBtn.disabled = false;
+      }
+       });
   </script>
 </body>
 </html>
