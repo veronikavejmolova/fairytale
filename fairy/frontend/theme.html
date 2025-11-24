@@ -17,6 +17,14 @@
   <label for="age">Věk dítěte:</label>
   <input type="range" id="age" name="age" min="3" max="13" value="6" oninput="ageValue.innerText = this.value">
   <span id="ageValue">6</span> let
+
+  <label for="length">Délka pohádky:</label><br>
+    <select id="length" name="length" required>
+      <option value="short">Krátká (1–10 vět)</option>
+      <option value="medium" selected>Střední (10-20 vět)</option>
+      <option value="long">Dlouhá (více než 20 vět)</option>
+    </select><br><br>
+
   <button type="submit">Další</button>
   <button type="button" id="fillBtn">Předvyplnit</button>
 </form>

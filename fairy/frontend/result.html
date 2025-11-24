@@ -1,58 +1,83 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-    <link rel="stylesheet" href="static/style.css">
-  <meta charset="UTF-8" />
-  <title>Výsledek pohádky</title>
-  <link rel="stylesheet" href="/static/style.css">
+    <meta charset="UTF-8" />
+    <title>Výsledek pohádky</title>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
   <h1>🧚‍♂️ Tvoje pohádka</h1>
-  <div id="summary" >
-      Téma: {{ theme }} <br>
-      Věk dítěte: {{ age }} <br>
-      Hlavní postava: {{ character }} <br>
-      Ponaučení: {{ moral }} <br>
-      Další nápady / popis: {{ prompt }} <br>
+
+  <div id="summary">
+      <strong>Téma:</strong> {{ theme }} <br>
+      <strong>Věk dítěte:</strong> {{ age }} <br>
+      <strong>Hlavní postava:</strong> {{ character }} <br>
+      <strong>Ponaučení:</strong> {{ moral }} <br>
+      {% if prompt %}
+      <strong>Další nápady:</strong> {{ prompt }} <br>
+      {% endif %}
   </div>
+
   <div id="story">{{ story }}</div>
 
-  <button id="copyBtn">📋 Zkopírovat pohádku</button>
-  <span id="copied" style="display:none;">✔ Zkopírováno!</span>
+  <div class="controls">
+      <button id="copyBtn">📋 Zkopírovat pohádku</button>
+      <span id="copied" style="display:none;">✔ Zkopírováno!</span>
 
-  <button id="playAudioBtn">🎧 Přehrát nahrávku</button>
-  <div id="loading" style="display:none;">Generuji hlas…</div>
-  <audio id="audioPlayer" controls style="display:none;"></audio>
+      <button id="playAudioBtn">🎧 Přehrát nahrávku</button>
+      <div id="loading" style="display:none;">Generuji hlas…</div>
+      <audio id="audioPlayer" controls style="display:none;"></audio>
 
-  <button id="newStoryBtn">🔄 Vytvořit novou pohádku</button>
+      <button id="newStoryBtn">🔄 Začít znovu od začátku</button>
+  </div>
+
+  <hr>
+
+  <h3>Nelíbí se ti délka? Zkus to znovu:</h3>
+  <form action="/generate" method="post" style="margin-top: 15px;">
+    <input type="hidden" name="theme" value="{{ theme }}">
+    <input type="hidden" name="character" value="{{ character }}">
+    <input type="hidden" name="moral" value="{{ moral }}">
+    <input type="hidden" name="prompt" value="{{ prompt }}">
+    <input type="hidden" name="age" value="{{ age }}">
+
+    <button type="submit" name="length" value="short">Krátká verze</button>
+    <button type="submit" name="length" value="medium">Střední verze</button>
+    <button type="submit" name="length" value="long">Dlouhá verze</button>
+  </form>
 
   <script>
+    // === 1. Logika kopírování ===
     const copyBtn = document.getElementById("copyBtn");
     const storyDiv = document.getElementById("story");
     const copiedMsg = document.getElementById("copied");
-    const newStoryBtn = document.getElementById("newStoryBtn");
-
-    const playBtn = document.getElementById("playAudioBtn");
-    const loading = document.getElementById("loading");
-    const audioPlayer = document.getElementById("audioPlayer");
 
     copyBtn.addEventListener("click", () => {
+      // Vytvoříme dočasný element pro zkopírování textu
       const textarea = document.createElement("textarea");
       textarea.value = storyDiv.innerText;
       document.body.appendChild(textarea);
       textarea.select();
-      document.execCommand("copy");
+      document.execCommand("copy"); // Starší, ale spolehlivá metoda
       document.body.removeChild(textarea);
 
       copiedMsg.style.display = "inline";
       setTimeout(() => copiedMsg.style.display = "none", 1500);
     });
 
-      newStoryBtn.addEventListener("click", () => {
+    // === 2. Navigace na začátek ===
+    const newStoryBtn = document.getElementById("newStoryBtn");
+    newStoryBtn.addEventListener("click", () => {
+      // Použijeme url_for z Jinja2 šablony pro správnou cestu
       window.location.href = "{{ url_for('theme') }}";
-      });
+    });
 
-       playBtn.addEventListener("click", async () => {
+    // === 3. Audio přehrávač (API verze z Main2) ===
+    const playBtn = document.getElementById("playAudioBtn");
+    const loading = document.getElementById("loading");
+    const audioPlayer = document.getElementById("audioPlayer");
+
+    playBtn.addEventListener("click", async () => {
       loading.style.display = "block";
       playBtn.disabled = true;
 
@@ -60,24 +85,28 @@
         const response = await fetch("/api/speak", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ text: storyDiv.innerText, voice_id: "piwFF76q4v4xA9Wyxu1R" })
+          // Posíláme text příběhu na backend
+          body: JSON.stringify({
+              text: storyDiv.innerText,
+              voice_id: "piwFF76q4v4xA9Wyxu1R" // ID hlasu
+          })
         });
 
         if (!response.ok) throw new Error("Chyba při generování hlasu");
 
+        // Zpracování odpovědi jako Audio Blob
         const blob = await response.blob();
         const url = URL.createObjectURL(blob);
         audioPlayer.src = url;
         audioPlayer.style.display = "block";
         audioPlayer.play();
       } catch (err) {
-        alert(err);
+        alert("Nepodařilo se přehrát zvuk: " + err);
       } finally {
         loading.style.display = "none";
         playBtn.disabled = false;
       }
-       });
+    });
   </script>
 </body>
 </html>
-
