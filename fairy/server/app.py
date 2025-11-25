@@ -5,9 +5,9 @@ from fastapi.responses import HTMLResponse
 from starlette.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 
-
 from fairy.llm.generator import generate
 from fairy.llm.theme_filter import is_theme_appropriate
+
 from fairy.text2speech.tts_server import router
 
 app = FastAPI()
@@ -31,6 +31,7 @@ async def api_generate():
 @app.get("/", response_class=HTMLResponse)
 async def theme(request: Request):
     return templates.TemplateResponse("theme.html", {"request": request})
+
 
 @app.post("/character", response_class=HTMLResponse)
 async def character(
@@ -155,5 +156,3 @@ async def generate_story(
         "super_types": super_types,
         "super_tone": super_tone,
     })
-from fairy.llm.theme_filter import is_theme_appropriate
-from fairy.text2speech.tts_server import router

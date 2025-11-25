@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-  <meta charset="UTF-8" />
-  <title>Krok 5 – Nadpřirozené bytosti</title>
+    <meta charset="UTF-8"/>
+    <title>Krok 5 – Nadpřirozené bytosti</title>
 </head>
 <body>
-  <h1>✨ Přítomnost nadpřirozených bytostí</h1>
+<h1>✨ Přítomnost nadpřirozených bytostí</h1>
 
-  <p>Zvol, jestli se ve tvé pohádce objeví nadpřirozené bytosti, případně jaké.</p>
+<p>Zvol, jestli se ve tvé pohádce objeví nadpřirozené bytosti, případně jaké.</p>
 
-  <form action="/generate" method="post">
+<form action="/generate" method="post">
 
     <input type="hidden" name="theme" value="{{ theme }}">
     <input type="hidden" name="character" value="{{ character }}">
@@ -22,40 +22,40 @@
     <label><input type="radio" name="supernatural_present" value="yes"> Ano</label><br><br>
 
     <div id="superDetails" style="display:none;">
-      <label for="super_types">Typy (odděl čárkou):</label><br>
-      <input type="text" id="super_types" name="super_types"
-        placeholder="např. víly, drak, lesní duch"><br><br>
+        <label for="super_types">Typy (odděl čárkou):</label><br>
+        <input type="text" id="super_types" name="super_types"
+               placeholder="např. víly, drak, lesní duch"><br><br>
 
-      <label for="super_tone">Jakou roli hrají?</label><br>
-      <select id="super_tone" name="super_tone">
-        <option value="helpful">Pomohou hrdinovi</option>
-        <option value="obstacle">Budou překážkou</option>
-        <option value="neutral">Neutrální / tajemné</option>
-      </select><br><br>
+        <label for="super_tone">Jakou roli hrají?</label><br>
+        <select id="super_tone" name="super_tone">
+            <option value="helpful">Pomohou hrdinovi</option>
+            <option value="obstacle">Budou překážkou</option>
+            <option value="neutral">Neutrální / tajemné</option>
+        </select><br><br>
     </div>
 
     <button type="submit">Vygenerovat pohádku</button>
     <button type="button" id="prefillSuper">Předvyplnit</button>
 
-  </form>
+</form>
 
-  <script>
+<script>
     const radios = document.getElementsByName('supernatural_present');
     const details = document.getElementById('superDetails');
 
     radios.forEach(r => r.addEventListener('change', () => {
-      details.style.display =
-        (document.querySelector('input[name="supernatural_present"]:checked').value === 'yes')
-        ? 'block'
-        : 'none';
+        details.style.display =
+            (document.querySelector('input[name="supernatural_present"]:checked').value === 'yes')
+                ? 'block'
+                : 'none';
     }));
 
     document.getElementById('prefillSuper').addEventListener('click', () => {
-      document.querySelector('input[value="yes"]').checked = true;
-      details.style.display = 'block';
-      document.getElementById('super_types').value = 'víly, starý drak';
-      document.getElementById('super_tone').value = 'helpful';
+        document.querySelector('input[value="yes"]').checked = true;
+        details.style.display = 'block';
+        document.getElementById('super_types').value = 'víly, starý drak';
+        document.getElementById('super_tone').value = 'helpful';
     });
-  </script>
+</script>
 </body>
 </html>

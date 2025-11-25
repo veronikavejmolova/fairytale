@@ -2,37 +2,37 @@
 <html lang="cs">
 <head>
     <link rel="stylesheet" href="static/style.css">
-  <meta charset="UTF-8" />
-  <title>Krok 3 – Ponaučení</title>
-  <link rel="stylesheet" href="/static/style.css">
+    <meta charset="UTF-8"/>
+    <title>Krok 3 – Ponaučení</title>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-  <h1>🧚‍♂️ Ponaučení pohádky</h1>
+<h1>🧚‍♂️ Ponaučení pohádky</h1>
 
-  <form action="/generate" method="post">
-    <input type="hidden" name="theme" value="{{ theme }}" />
-    <input type="hidden" name="character" value="{{ character }}" />
+<form action="/generate" method="post">
+    <input type="hidden" name="theme" value="{{ theme }}"/>
+    <input type="hidden" name="character" value="{{ character }}"/>
     <input type="hidden" name="age" value="{{ age }}">
 
-  <form action="/additional_characters" method="post">
+    <form action="/additional_characters" method="post">
 
-    <input type="hidden" name="theme" value="{{ theme }}">
-    <input type="hidden" name="character" value="{{ character }}">
-    <input type="hidden" name="length" value="{{ length }}">
+        <input type="hidden" name="theme" value="{{ theme }}">
+        <input type="hidden" name="character" value="{{ character }}">
+        <input type="hidden" name="length" value="{{ length }}">
 
-    <label for="moral">Ponaučení:</label><br>
-    <input type="text" id="moral" name="moral" required><br><br>
+        <label for="moral">Ponaučení:</label><br>
+        <input type="text" id="moral" name="moral" required><br><br>
 
-    <button type="submit">Další</button>
-    <button type="button" id="fillBtn">Předvyplnit</button>
+        <button type="submit">Další</button>
+        <button type="button" id="fillBtn">Předvyplnit</button>
 
-</form>
+    </form>
 
-  <script>
-    document.getElementById("fillBtn").addEventListener("click", () => {
-      document.getElementById("moral").value = "i malý hrdina může dokázat velké věci";
-    });
-  </script>
+    <script>
+        document.getElementById("fillBtn").addEventListener("click", () => {
+            document.getElementById("moral").value = "i malý hrdina může dokázat velké věci";
+        });
+    </script>
 
 </body>
 </html>

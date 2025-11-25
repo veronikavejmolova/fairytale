@@ -10,8 +10,6 @@ from fastapi.responses import HTMLResponse, JSONResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from starlette.responses import PlainTextResponse
 
-
-
 from fairy.text2speech.config import (
     ELEVENLABS_API_KEY,
     ELEVENLABS_MODEL_ID,
@@ -30,19 +28,18 @@ templates = Jinja2Templates(directory=str(TEMPLATES_DIR))
 
 router = APIRouter()
 
-#sending story to tts
+
+# sending story to tts
 @router.post("/tts", response_class=HTMLResponse)
 async def tts_post(request: Request, text: str = Form(...)):
     return render_tts_page(request, text)
+
 
 @router.get("/audio/{cache_key}/status")
 async def audio_status(cache_key: str):
     audio_cache_file = CACHE_DIR / f"{cache_key}.mp3"
     logging.info(audio_cache_file.exists())
     return JSONResponse({"ready": audio_cache_file.exists()})
-
-
-
 
 
 def render_tts_page(request: Request, story: str) -> HTMLResponse:
@@ -55,10 +52,10 @@ def render_tts_page(request: Request, story: str) -> HTMLResponse:
     text_cache_file = CACHE_DIR / f"{cache_key}.txt"
     if not text_cache_file.exists():
         text_cache_file.write_text(story, encoding="utf-8")
-    logging.info(  {  "request": request,
-        "story": story,
-        "cache_key": cache_key,
-        "audio_mime": AUDIO_MIME_TYPE, "cache":text_cache_file.exists()})
+    logging.info({"request": request,
+                  "story": story,
+                  "cache_key": cache_key,
+                  "audio_mime": AUDIO_MIME_TYPE, "cache": text_cache_file.exists()})
     return templates.TemplateResponse(
         "tts.html",  # název šablony v TEMPLATES_DIR
         {
@@ -68,6 +65,7 @@ def render_tts_page(request: Request, story: str) -> HTMLResponse:
             "audio_mime": AUDIO_MIME_TYPE,
         },
     )
+
 
 @router.post("/audio/{cache_key}/generate")
 async def generate_audio(cache_key: str):
@@ -106,7 +104,6 @@ async def generate_audio(cache_key: str):
         return PlainTextResponse(f"Error generating audio: {e}", status_code=500)
 
 
-
 @router.get("/audio/{cache_key}")
 async def audio(cache_key: str):
     text_cache_file = CACHE_DIR / f"{cache_key}.txt"
@@ -136,4 +133,3 @@ async def audio(cache_key: str):
         audio_cache_file.write_bytes(audio_bytes)
         audio_bytesio = BytesIO(audio_bytes)
         return StreamingResponse(audio_bytesio, media_type=AUDIO_MIME_TYPE)
-

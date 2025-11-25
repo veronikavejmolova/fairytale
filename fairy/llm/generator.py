@@ -1,5 +1,6 @@
 from fairy.llm.llm_calling import call_llm
 
+
 def generate(tema_pohadky: str, length: str = "medium") -> str:
     length_map = {
         "short": "1-10 vět",
@@ -15,6 +16,7 @@ def generate(tema_pohadky: str, length: str = "medium") -> str:
 
     vygenerovany_pribeh = call_llm(final_prompt.strip())
     return vygenerovany_pribeh
+
 
 if __name__ == '__main__':
     tema = "o veverce, která se bála výšek"

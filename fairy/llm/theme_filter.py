@@ -6,7 +6,6 @@ BANNED_THEMES = ["válka", "vražda", "drogy", "alkohol", "sex", "terorismus", "
 
 
 def is_theme_appropriate(theme: str) -> bool:
-
     theme_lower = theme.lower()
     for banned in BANNED_THEMES:
         if banned in theme_lower:
