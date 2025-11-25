@@ -5,3 +5,6 @@ openai
 sqlitedict
 python-multipart
 python-dotenv
+elevenlabs
+gunicorn
+requests

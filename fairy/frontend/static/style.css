@@ -25,6 +25,7 @@ button, a {
   display: inline-block;
   margin-top: 0.5rem;
   padding: 0.6rem 1.2rem;
+  cursor: pointer;
   border: none;
   border-radius: 6px;
   background-color: #4caf50;
@@ -74,3 +75,4 @@ button.purple:hover {
   margin-left: 10px;
   font-weight: bold;
 }
+
