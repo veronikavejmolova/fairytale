@@ -31,8 +31,11 @@ router = APIRouter()
 
 # sending story to tts
 @router.post("/tts", response_class=HTMLResponse)
-async def tts_post(request: Request, text: str = Form(...)):
-    return render_tts_page(request, text)
+async def tts(request: Request):  # <--- 1. Change to 'async def'
+    data = await request.json()  # <--- 2. Add 'await'
+
+    # request.json() returns a dictionary, so use ["text"], not .text
+    return render_tts_page(request, data["text"])
 
 
 @router.get("/audio/{cache_key}/status")
