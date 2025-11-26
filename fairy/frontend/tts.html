@@ -56,18 +56,8 @@
 
 
     // text to speech tss
-    const cacheKey = {
-    {
-        cache_key | tojson
-    }
-    }
-    ;
-    const audioMime = {
-    {
-        audio_mime | tojson
-    }
-    }
-    ;
+    const cacheKey = {{ cache_key | tojson }};
+    const audioMime = {{ audio_mime | tojson }};
     const audioPlaceholder = document.getElementById('audio-placeholder');
 
     let percent = 10;

@@ -5,10 +5,11 @@ from pathlib import Path
 
 from starlette.templating import Jinja2Templates
 import httpx
-from fastapi import FastAPI, Query, Form, Request, APIRouter
+from fastapi import FastAPI, Query, Form, Request, APIRouter, Body
 from fastapi.responses import HTMLResponse, JSONResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from starlette.responses import PlainTextResponse
+from pydantic import BaseModel
 
 from fairy.text2speech.config import (
     ELEVENLABS_API_KEY,
@@ -29,38 +30,61 @@ templates = Jinja2Templates(directory=str(TEMPLATES_DIR))
 router = APIRouter()
 
 
-# sending story to tts
-@router.post("/tts", response_class=HTMLResponse)
-async def tts(request: Request):  # <--- 1. Change to 'async def'
-    data = await request.json()  # <--- 2. Add 'await'
+# Model pro příchozí JSON data z result.html
+class TTSRequest(BaseModel):
+    text: str
+    voice_id: str = None
 
-    # request.json() returns a dictionary, so use ["text"], not .text
-    return render_tts_page(request, data["text"])
+
+# 1. Původní endpoint pro starou metodu (formulář)
+@router.post("/tts", response_class=HTMLResponse)
+async def tts_post(request: Request, text: str = Form(...)):
+    return render_tts_page(request, text)
+
+
+# 2. NOVÝ endpoint pro moderní result.html (vrací JSON s klíčem, ne HTML)
+@router.post("/tts/api/init")
+async def tts_init_api(request: TTSRequest):
+    story = request.text
+    # Stejná logika hashování jako dole
+    hash_input = f"{story}|{ELEVENLABS_VOICE_ID}|{ELEVENLABS_MODEL_ID}|0.5|0.5"
+    cache_key = hashlib.sha256(hash_input.encode("utf-8")).hexdigest()
+
+    # Uložíme text do cache, aby ho /generate mohl najít
+    text_cache_file = CACHE_DIR / f"{cache_key}.txt"
+    if not text_cache_file.exists():
+        text_cache_file.write_text(story, encoding="utf-8")
+
+    return JSONResponse({
+        "cache_key": cache_key,
+        "audio_mime": AUDIO_MIME_TYPE
+    })
 
 
 @router.get("/audio/{cache_key}/status")
 async def audio_status(cache_key: str):
     audio_cache_file = CACHE_DIR / f"{cache_key}.mp3"
-    logging.info(audio_cache_file.exists())
+    logging.info(f"Checking status for {cache_key}: {audio_cache_file.exists()}")
     return JSONResponse({"ready": audio_cache_file.exists()})
 
 
 def render_tts_page(request: Request, story: str) -> HTMLResponse:
     """
-    Render the result page for TTS.
-    Triggers ElevenLabs audio generation in the background, shows a progress bar, and swaps in the player when ready.
+    Render the result page for TTS (Stará metoda).
     """
     hash_input = f"{story}|{ELEVENLABS_VOICE_ID}|{ELEVENLABS_MODEL_ID}|0.5|0.5"
     cache_key = hashlib.sha256(hash_input.encode("utf-8")).hexdigest()
     text_cache_file = CACHE_DIR / f"{cache_key}.txt"
     if not text_cache_file.exists():
         text_cache_file.write_text(story, encoding="utf-8")
-    logging.info({"request": request,
-                  "story": story,
-                  "cache_key": cache_key,
-                  "audio_mime": AUDIO_MIME_TYPE, "cache": text_cache_file.exists()})
+    logging.info({
+        "request": request,
+        "story": story,
+        "cache_key": cache_key,
+        "audio_mime": AUDIO_MIME_TYPE, "cache": text_cache_file.exists()
+    })
     return templates.TemplateResponse(
-        "tts.html",  # název šablony v TEMPLATES_DIR
+        "tts.html",
         {
             "request": request,
             "story": story,
@@ -112,13 +136,17 @@ async def audio(cache_key: str):
     text_cache_file = CACHE_DIR / f"{cache_key}.txt"
     if not text_cache_file.exists():
         return PlainTextResponse("Text not found for audio", status_code=404)
-    text = text_cache_file.read_text(encoding="utf-8")
 
     audio_cache_file = CACHE_DIR / f"{cache_key}.mp3"
+
+    # Pokud audio existuje, streamujeme ho
     if audio_cache_file.exists():
         audio_fp = audio_cache_file.open("rb")
         return StreamingResponse(audio_fp, media_type=AUDIO_MIME_TYPE)
 
+    # Fallback: pokud neexistuje (mělo by být generováno přes /generate), zkusíme vygenerovat on-the-fly
+    # (Tato část se v ideálním případě nepoužije, pokud funguje polling flow, ale je to pojistka)
+    text = text_cache_file.read_text(encoding="utf-8")
     url = f"https://api.elevenlabs.io/v1/text-to-speech/{ELEVENLABS_VOICE_ID}"
     headers = {
         "xi-api-key": ELEVENLABS_API_KEY,

@@ -5,12 +5,6 @@
     <title>Výsledek pohádky</title>
     <link rel="stylesheet" href="/static/style.css">
     <style>
-        body {
-            font-family: sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
 
         textarea#story {
             width: 100%;
@@ -22,7 +16,7 @@
             border-radius: 8px;
             resize: vertical;
             margin-bottom: 20px;
-            box-sizing: border-box; /* Ensures padding doesn't affect width */
+            box-sizing: border-box;
         }
 
         .controls {
@@ -33,18 +27,6 @@
             margin-top: 10px;
             color: #666;
             font-style: italic;
-        }
-
-        #copied {
-            color: green;
-            margin-left: 10px;
-            font-weight: bold;
-        }
-
-        button {
-            cursor: pointer;
-            padding: 8px 12px;
-            font-size: 1em;
         }
     </style>
 </head>
@@ -74,7 +56,7 @@
         <br><br>
 
         <button id="playAudioBtn">🎧 Přehrát nahrávku</button>
-        <div id="loading" style="display:none;">Generuji hlas...</div>
+        <div id="loading" style="display:none;">Generuji hlas (chvilku to potrvá)...</div>
         <audio id="audioPlayer" controls style="display:none; margin-top: 10px; width: 100%;"></audio>
 
         <br><br>
@@ -91,6 +73,10 @@
         <input type="hidden" name="moral" value="{{ moral }}">
         <input type="hidden" name="prompt" value="{{ prompt }}">
         <input type="hidden" name="age" value="{{ age }}">
+        <input type="hidden" name="other_characters" value="{{ other_characters }}">
+        <input type="hidden" name="supernatural_present" value="{{ supernatural_present }}">
+        <input type="hidden" name="super_types" value="{{ super_types }}">
+        <input type="hidden" name="super_tone" value="{{ super_tone }}">
 
         <button type="submit" name="length" value="short">Krátká verze</button>
         <button type="submit" name="length" value="medium">Střední verze</button>
@@ -99,7 +85,6 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // Element References
         const storyInput = document.getElementById("story");
         const copyBtn = document.getElementById("copyBtn");
         const copiedMsg = document.getElementById("copied");
@@ -111,28 +96,24 @@
         // --- 1. Copy Functionality ---
         copyBtn.addEventListener("click", async () => {
             try {
-                // Modern approach
                 await navigator.clipboard.writeText(storyInput.value);
             } catch (err) {
-                // Fallback for older browsers
                 storyInput.select();
                 document.execCommand("copy");
             }
-
-            // Show success message
             copiedMsg.style.display = "inline";
             setTimeout(() => copiedMsg.style.display = "none", 1500);
         });
 
-        // --- 2. Audio Player Functionality (Async/Await) ---
+        // --- 2. Audio Logic (Hybrid: Modern Fetch + Server Polling) ---
         playBtn.addEventListener("click", async () => {
-            // Reset UI state
             loading.style.display = "block";
             playBtn.disabled = true;
             audioPlayer.style.display = "none";
 
             try {
-                const response = await fetch("{{ url_for('tts') }}", {
+                // KROK A: Získáme Cache Key a inicializujeme požadavek
+                const initResponse = await fetch("/tts/api/init", {
                     method: "POST",
                     headers: {"Content-Type": "application/json"},
                     body: JSON.stringify({
@@ -141,30 +122,49 @@
                     })
                 });
 
-                if (!response.ok) {
-                    throw new Error(`Chyba serveru: ${response.status}`);
-                }
+                if (!initResponse.ok) throw new Error("Chyba při inicializaci TTS");
+                const initData = await initResponse.json();
+                const cacheKey = initData.cache_key;
 
-                // Convert response to blob
-                const blob = await response.blob();
-                const url = URL.createObjectURL(blob);
+                // KROK B: Spustíme generování na pozadí (fire and forget fetch)
+                fetch(`/audio/${cacheKey}/generate`, {method: "POST"});
 
-                // Setup player
-                audioPlayer.src = url;
-                audioPlayer.style.display = "block";
+                // KROK C: Polling - ptáme se serveru "už je to hotové?"
+                const checkStatus = async () => {
+                    try {
+                        const statusResp = await fetch(`/audio/${cacheKey}/status`);
+                        const statusData = await statusResp.json();
 
-                // Attempt to auto-play (browsers might block this without interaction)
-                try {
-                    await audioPlayer.play();
-                } catch (playErr) {
-                    console.log("Autoplay prevented, user must click play on audio element.");
-                }
+                        if (statusData.ready) {
+                            // Je to hotové! Nastavíme přehrávač.
+                            loading.style.display = "none";
+                            playBtn.disabled = false;
+
+                            // Přidáme náhodný query parametr (?t=...), aby prohlížeč necacheoval staré chyby
+                            audioPlayer.src = `/audio/${cacheKey}?t=${new Date().getTime()}`;
+                            audioPlayer.style.display = "block";
+
+                            try {
+                                await audioPlayer.play();
+                            } catch (e) {
+                                console.log("Autoplay zablokován prohlížečem, uživatel musí kliknout play.");
+                            }
+                        } else {
+                            // Není hotové, zkusíme to znovu za 2 sekundy
+                            setTimeout(checkStatus, 2000);
+                        }
+                    } catch (err) {
+                        console.error("Chyba při status checku:", err);
+                        loading.innerText = "Chyba při kontrole stavu.";
+                    }
+                };
+
+                // Spustíme první kontrolu
+                checkStatus();
 
             } catch (err) {
                 console.error(err);
-                alert("Nepodařilo se vygenerovat zvuk: " + err.message);
-            } finally {
-                // Always reset the loading state, even if there was an error
+                alert("Nepodařilo se zahájit generování zvuku: " + err.message);
                 loading.style.display = "none";
                 playBtn.disabled = false;
             }
