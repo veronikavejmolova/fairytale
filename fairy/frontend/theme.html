@@ -9,23 +9,38 @@
 <h1>🧚‍♂️ Generátor pohádek</h1>
 
 <form action="/character" method="post">
-    <label for="theme">Téma pohádky:</label>
-    <input type="text" id="theme" name="theme" required/>
+
+    <div class="form-group">
+        <label for="theme">Téma pohádky:</label>
+        <input type="text" id="theme" name="theme" placeholder="Např. o ztraceném štěňátku..." required/>
+    </div>
     <input type="hidden" name="age" value="{{ age }}">
 
-    <label for="age">Věk dítěte:</label>
-    <input type="range" id="age" name="age" min="3" max="13" value="6" oninput="ageValue.innerText = this.value">
-    <span id="ageValue">6</span> let
+    <div class="form-group">
+        <label for="age">Věk dítěte: (<span id="ageValue">6</span> let)</label>
+        <div class="range-container">
+            <span style="font-size:0.8em">3</span>
+            <input type="range" id="age" name="age" min="3" max="13" value="6"
+                   oninput="ageValue.innerText = this.value">
+            <span style="font-size:0.8em">13</span>
+        </div>
+    </div>
 
-    <label for="length">Délka pohádky:</label><br>
-    <select id="length" name="length" required>
-        <option value="short">Krátká (1–10 vět)</option>
-        <option value="medium" selected>Střední (10-20 vět)</option>
-        <option value="long">Dlouhá (více než 20 vět)</option>
-    </select><br><br>
+    <div class="form-group">
+        <label for="length">Délka pohádky:</label>
+        <select id="length" name="length" required>
+            <option value="short">Krátká (1–10 vět)</option>
+            <option value="medium" selected>Střední (10–20 vět)</option>
+            <option value="long">Dlouhá (více než 20 vět)</option>
+        </select>
+    </div>
 
-    <button type="submit">Další</button>
-    <button type="button" id="fillBtn">Předvyplnit</button>
+    <div class="button-row">
+        <div class="button-group-left">
+            <button type="submit">Další ➝</button>
+        </div>
+        <button type="button" id="fillBtn" class="btn-prefill">Předvyplnit</button>
+    </div>
 </form>
 
 <script>
@@ -39,4 +54,3 @@
 
 </body>
 </html>
-

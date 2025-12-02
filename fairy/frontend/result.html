@@ -4,39 +4,16 @@
     <meta charset="UTF-8"/>
     <title>Výsledek pohádky</title>
     <link rel="stylesheet" href="/static/style.css">
-    <style>
-
-        textarea#story {
-            width: 100%;
-            min-height: 200px;
-            padding: 15px;
-            font-family: inherit;
-            font-size: 1.1em;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            resize: vertical;
-            margin-bottom: 20px;
-            box-sizing: border-box;
-        }
-
-        .controls {
-            margin-bottom: 20px;
-        }
-
-        #loading {
-            margin-top: 10px;
-            color: #666;
-            font-style: italic;
-        }
-    </style>
 </head>
 <body>
 
-    <h1>🧚‍♂️ Tvoje pohádka</h1>
+<h1>🧚‍♂️ Tvoje pohádka</h1>
 
-    <div id="summary" style="background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+<div class="white-box">
+
+    <div id="summary">
         <strong>Téma:</strong> {{ theme }} <br>
-        <strong>Věk dítěte:</strong> {{ age }} <br>
+        <strong>Věk dítěte:</strong> {{ age }} let <br>
         <strong>Hlavní postava:</strong> {{ character }} <br>
         <strong>Ponaučení:</strong> {{ moral }} <br>
         {% if prompt %}
@@ -49,39 +26,37 @@
 
     <textarea id="story">{{ story }}</textarea>
 
-    <div class="controls">
-        <button id="copyBtn">📋 Zkopírovat text</button>
-        <span id="copied" style="display:none;">✔ Zkopírováno!</span>
-
-        <br><br>
-
-        <button id="playAudioBtn">🎧 Přehrát nahrávku</button>
-        <div id="loading" style="display:none;">Generuji hlas (chvilku to potrvá)...</div>
-        <audio id="audioPlayer" controls style="display:none; margin-top: 10px; width: 100%;"></audio>
-
-        <br><br>
-
-        <button id="newStoryBtn">🔄 Začít znovu</button>
+    <div class="status-bar">
+        <span id="copied" style="display:none;">✔ Text zkopírován do schránky!</span>
+        <div id="loading" style="display:none;">⏳ Generuji hlas, chvilku strpení...</div>
     </div>
 
-    <hr>
+    <audio id="audioPlayer" controls style="display:none;"></audio>
 
-    <h3>Nelíbí se ti délka? Zkus to znovu:</h3>
-    <form action="/generate" method="post" style="margin-top: 15px;">
-        <input type="hidden" name="theme" value="{{ theme }}">
-        <input type="hidden" name="character" value="{{ character }}">
-        <input type="hidden" name="moral" value="{{ moral }}">
-        <input type="hidden" name="prompt" value="{{ prompt }}">
-        <input type="hidden" name="age" value="{{ age }}">
-        <input type="hidden" name="other_characters" value="{{ other_characters }}">
-        <input type="hidden" name="supernatural_present" value="{{ supernatural_present }}">
-        <input type="hidden" name="super_types" value="{{ super_types }}">
-        <input type="hidden" name="super_tone" value="{{ super_tone }}">
+    <div class="button-row">
+        <div class="button-group-left">
+            <button id="copyBtn" class="btn-back">📋 Zkopírovat</button>
+            <button id="playAudioBtn">🎧 Přehrát</button>
+        </div>
+        <button id="newStoryBtn" class="btn-gradient">🔄 Začít znovu</button>
+    </div>
+</div>
 
+<form action="/generate" method="post" style="margin-top: 2rem;">
+    <h3 style="margin-top:0; text-align: center;">Nelíbí se ti délka? Zkus to znovu:</h3>
+
+    <input type="hidden" name="theme" value="{{ theme }}">
+    <input type="hidden" name="character" value="{{ character }}">
+    <input type="hidden" name="moral" value="{{ moral }}">
+    <input type="hidden" name="prompt" value="{{ prompt }}">
+    <input type="hidden" name="age" value="{{ age }}">
+
+    <div class="btn-group-full">
         <button type="submit" name="length" value="short">Krátká verze</button>
         <button type="submit" name="length" value="medium">Střední verze</button>
         <button type="submit" name="length" value="long">Dlouhá verze</button>
-    </form>
+    </div>
+</form>
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -93,7 +68,7 @@
         const audioPlayer = document.getElementById("audioPlayer");
         const newStoryBtn = document.getElementById("newStoryBtn");
 
-        // --- 1. Copy Functionality ---
+        // Kopírování
         copyBtn.addEventListener("click", async () => {
             try {
                 await navigator.clipboard.writeText(storyInput.value);
@@ -101,19 +76,20 @@
                 storyInput.select();
                 document.execCommand("copy");
             }
-            copiedMsg.style.display = "inline";
-            setTimeout(() => copiedMsg.style.display = "none", 1500);
+            copiedMsg.style.display = "inline-flex";
+            setTimeout(() => copiedMsg.style.display = "none", 2500);
         });
 
-        // --- 2. Audio Logic (Hybrid: Modern Fetch + Server Polling) ---
+        // Přehrávání
         playBtn.addEventListener("click", async () => {
-            loading.style.display = "block";
+            copiedMsg.style.display = "none";
+            loading.style.display = "inline-flex";
             playBtn.disabled = true;
+            playBtn.style.opacity = "0.7";
             audioPlayer.style.display = "none";
 
             try {
-                // KROK A: Získáme Cache Key a inicializujeme požadavek
-                const initResponse = await fetch("/tts/api/init", {
+                const response = await fetch("{{ url_for('tts_stream') }}", {
                     method: "POST",
                     headers: {"Content-Type": "application/json"},
                     body: JSON.stringify({
@@ -122,55 +98,33 @@
                     })
                 });
 
-                if (!initResponse.ok) throw new Error("Chyba při inicializaci TTS");
-                const initData = await initResponse.json();
-                const cacheKey = initData.cache_key;
+                if (!response.ok) {
+                    const errText = await response.text();
+                    throw new Error(`Chyba serveru (${response.status}): ${errText}`);
+                }
 
-                // KROK B: Spustíme generování na pozadí (fire and forget fetch)
-                fetch(`/audio/${cacheKey}/generate`, {method: "POST"});
+                const blob = await response.blob();
+                const url = URL.createObjectURL(blob);
+                audioPlayer.src = url;
+                audioPlayer.style.display = "block";
 
-                // KROK C: Polling - ptáme se serveru "už je to hotové?"
-                const checkStatus = async () => {
-                    try {
-                        const statusResp = await fetch(`/audio/${cacheKey}/status`);
-                        const statusData = await statusResp.json();
-
-                        if (statusData.ready) {
-                            // Je to hotové! Nastavíme přehrávač.
-                            loading.style.display = "none";
-                            playBtn.disabled = false;
-
-                            // Přidáme náhodný query parametr (?t=...), aby prohlížeč necacheoval staré chyby
-                            audioPlayer.src = `/audio/${cacheKey}?t=${new Date().getTime()}`;
-                            audioPlayer.style.display = "block";
-
-                            try {
-                                await audioPlayer.play();
-                            } catch (e) {
-                                console.log("Autoplay zablokován prohlížečem, uživatel musí kliknout play.");
-                            }
-                        } else {
-                            // Není hotové, zkusíme to znovu za 2 sekundy
-                            setTimeout(checkStatus, 2000);
-                        }
-                    } catch (err) {
-                        console.error("Chyba při status checku:", err);
-                        loading.innerText = "Chyba při kontrole stavu.";
-                    }
-                };
-
-                // Spustíme první kontrolu
-                checkStatus();
+                try {
+                    await audioPlayer.play();
+                } catch (playErr) {
+                    console.log("Autoplay blocked");
+                }
 
             } catch (err) {
                 console.error(err);
-                alert("Nepodařilo se zahájit generování zvuku: " + err.message);
+                alert("Chyba: " + err.message);
+            } finally {
                 loading.style.display = "none";
                 playBtn.disabled = false;
+                playBtn.style.opacity = "1";
             }
         });
 
-        // --- 3. New Story Button ---
+        // Začít znovu
         newStoryBtn.addEventListener("click", () => {
             window.location.href = "{{ url_for('theme') }}";
         });

@@ -1,4 +1,3 @@
-
 body {
     font-family: 'Georgia', serif;
     max-width: 700px;
@@ -6,73 +5,209 @@ body {
     padding: 1rem;
     background-color: #fafafa;
     color: #222;
+    line-height: 1.6;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 1.5rem;
+}
+
+form, .white-box {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    margin-bottom: 2rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    color: #444;
+}
+
+input[type="text"],
+input[type="number"],
+select,
+textarea {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-family: inherit;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+}
+
+input[type="text"]:focus,
+textarea:focus {
+    border-color: #4caf50;
+    outline: none;
 }
 
 textarea {
-    width: 100%;
-    height: 100px;
-    margin: 1rem 0;
-    font-family: inherit;
-    font-size: 1rem;
-    padding: 0.5rem;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    box-sizing: border-box;
+    min-height: 120px;
+    resize: vertical;
 }
 
+.range-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
 
-button, a {
-    display: inline-block;
-    margin-top: 0.5rem;
-    padding: 0.6rem 1.2rem;
+input[type="range"] {
+    flex-grow: 1;
+    cursor: pointer;
+}
+
+button, a.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.7rem 1.4rem;
     cursor: pointer;
     border: none;
     border-radius: 6px;
-    background-color: #4caf50;
-    color: white;
-    cursor: pointer;
-    text-decoration: none;
     font-size: 1rem;
-    font-weight: bold;
-    transition: background-color 0.2s ease;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    color: white;
+    background-color: #4caf50;
 }
 
-button:hover, a:hover {
-    background-color: #45a049;
-}
-
-
-button.purple {
-    background-color: #6b46c1;
-}
-
-button.purple:hover {
-    background-color: #553c9a;
-}
-
-
-#story {
-    white-space: pre-wrap;
-    margin-top: 1rem;
-    min-height: 50px;
-    padding: 1rem;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    border: 1px solid #eee;
+button:hover {
+    background-color: #43a047;
+    transform: translateY(-1px);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
+button.btn-back {
+    background-color: #4caf50;
+}
+button.btn-back:hover {
+    background-color: #43a047;
+}
+
+button.btn-prefill {
+    background-color: #2196f3;
+}
+button.btn-prefill:hover {
+    background-color: #1e88e5;
+}
+
+
+button.btn-gradient {
+    background: linear-gradient(135deg, #4caf50 0%, #008CBA 100%);
+    color: white;
+    font-weight: bold;
+    border: none;
+    padding: 0.8rem 2rem;
+    font-size: 1.1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+button.btn-gradient:hover {
+    background: linear-gradient(135deg, #43a047 0%, #007bb5 100%);
+    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+    transform: scale(1.02);
+}
+
+/* --- Rozložení tlačítek (Flexbox) - pro běžné kroky --- */
+.button-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #eee;
+}
+
+.button-group-left {
+    display: flex;
+    gap: 10px;
+}
+
+/* --- Rozložení tlačítek (Grid) - pro Supernatural (3 prvky: Vlevo-Střed-Vpravo) --- */
+.button-row-centered {
+    display: grid;
+    /* Tři sloupce: 1. zbytek místa, 2. velikost obsahu (tlačítka), 3. zbytek místa */
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #eee;
+    gap: 10px;
+}
+
+.button-row-centered > :first-child {
+    justify-self: start; /* První prvek (Zpět) doleva */
+}
+
+.button-row-centered > :nth-child(2) {
+    justify-self: center; /* Prostřední prvek (Vygenerovat) na střed */
+}
+
+.button-row-centered > :last-child {
+    justify-self: end; /* Poslední prvek (Předvyplnit) doprava */
+}
+
+/* --- Tlačítka pro změnu délky (Result) --- */
+.btn-group-full {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    margin-top: 1rem;
+}
+
+.btn-group-full button {
+    flex: 1;
+    text-align: center;
+}
+
+#summary {
+    background: #ffffff;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #fafafa;
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+}
+
+#story {
+    line-height: 1.8;
+    background-color: #fdfdfd;
+}
+
+.status-bar {
+    height: 24px;
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #4caf50;
+    text-align: left;
+    display: flex;
+    align-items: center;
+}
 
 #loading {
+    margin-top: 10px;
     font-style: italic;
     color: #666;
+    font-weight: normal;
 }
 
-
-#copied {
-    display: none;
-    color: green;
-    margin-left: 10px;
-    font-weight: bold;
+audio {
+    width: 100%;
+    margin-bottom: 15px;
+    border-radius: 30px;
 }
-

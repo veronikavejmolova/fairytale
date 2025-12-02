@@ -11,12 +11,19 @@
 <form action="/moral" method="post">
     <input type="hidden" id="theme" name="theme" value="{{ theme }}"/>
     <input type="hidden" name="age" value="{{ age }}"/>
+    <input type="hidden" name="length" value="{{ length }}">
+    <div class="form-group">
+        <label for="character">Hlavní postava:</label>
+        <input type="text" id="character" name="character" placeholder="Např. statečný jezevec Pepa" required/>
+    </div>
 
-    <label for="character">Hlavní postava:</label>
-    <input type="text" id="character" name="character" required/>
-
-    <button type="submit">Další</button>
-    <button id="fillBtn" type="button">Předvyplnit</button>
+    <div class="button-row">
+        <div class="button-group-left">
+            <button type="button" class="btn-back" onclick="history.back()">← Zpět</button>
+            <button type="submit">Další ➝</button>
+        </div>
+        <button id="fillBtn" type="button" class="btn-prefill">Předvyplnit</button>
+    </div>
 </form>
 
 <script>
@@ -28,7 +35,5 @@
     });
 </script>
 
-
 </body>
 </html>
-

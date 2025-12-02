@@ -8,8 +8,6 @@
 <body>
 <h1>✨ Přítomnost nadpřirozených bytostí</h1>
 
-<p>Zvol, jestli se ve tvé pohádce objeví nadpřirozené bytosti, případně jaké.</p>
-
 <form action="/generate" method="post">
 
     <input type="hidden" name="theme" value="{{ theme }}">
@@ -19,26 +17,41 @@
     <input type="hidden" name="other_characters" value="{{ other_characters }}">
     <input type="hidden" name="age" value="{{ age }}">
 
-
-    <label>Objeví se nadpřirozené bytosti?</label><br>
-    <label><input type="radio" name="supernatural_present" value="no" checked> Ne</label><br>
-    <label><input type="radio" name="supernatural_present" value="yes"> Ano</label><br><br>
-
-    <div id="superDetails" style="display:none;">
-        <label for="super_types">Typy (odděl čárkou):</label><br>
-        <input type="text" id="super_types" name="super_types"
-               placeholder="např. víly, drak, lesní duch"><br><br>
-
-        <label for="super_tone">Jakou roli hrají?</label><br>
-        <select id="super_tone" name="super_tone">
-            <option value="helpful">Pomohou hrdinovi</option>
-            <option value="obstacle">Budou překážkou</option>
-            <option value="neutral">Neutrální / tajemné</option>
-        </select><br><br>
+    <div class="form-group">
+        <label>Objeví se nadpřirozené bytosti?</label>
+        <div>
+            <label style="display:inline; margin-right: 15px;">
+                <input type="radio" name="supernatural_present" value="no" checked> Ne
+            </label>
+            <label style="display:inline;">
+                <input type="radio" name="supernatural_present" value="yes"> Ano
+            </label>
+        </div>
     </div>
 
-    <button type="submit">Vygenerovat pohádku</button>
-    <button type="button" id="prefillSuper">Předvyplnit</button>
+    <div id="superDetails"
+         style="display:none; margin-top: 20px; padding: 15px; border-radius: 8px;">
+        <div class="form-group">
+            <label for="super_types">Typy (odděl čárkou):</label>
+            <input type="text" id="super_types" name="super_types"
+                   placeholder="např. víly, drak, lesní duch">
+        </div>
+
+        <div class="form-group">
+            <label for="super_tone">Jakou roli hrají?</label>
+            <select id="super_tone" name="super_tone">
+                <option value="helpful">Pomohou hrdinovi</option>
+                <option value="obstacle">Budou překážkou</option>
+                <option value="neutral">Neutrální / tajemné</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="button-row-centered">
+        <button type="button" class="btn-back" onclick="history.back()">← Zpět</button>
+        <button type="submit" class="btn-gradient">✨ Vygenerovat pohádku ✨</button>
+        <button type="button" id="prefillSuper" class="btn-prefill">Předvyplnit</button>
+    </div>
 
 </form>
 
@@ -47,15 +60,17 @@
     const details = document.getElementById('superDetails');
 
     radios.forEach(r => r.addEventListener('change', () => {
-        details.style.display =
-            (document.querySelector('input[name="supernatural_present"]:checked').value === 'yes')
-                ? 'block'
-                : 'none';
+        const isYes = document.querySelector('input[name="supernatural_present"]:checked').value === 'yes';
+        details.style.display = isYes ? 'block' : 'none';
     }));
 
     document.getElementById('prefillSuper').addEventListener('click', () => {
-        document.querySelector('input[value="yes"]').checked = true;
-        details.style.display = 'block';
+        // Označit radio "Ano"
+        const yesRadio = document.querySelector('input[value="yes"]');
+        yesRadio.checked = true;
+        // Vyvolat událost change, aby se zobrazil detail
+        yesRadio.dispatchEvent(new Event('change'));
+
         document.getElementById('super_types').value = 'víly, starý drak';
         document.getElementById('super_tone').value = 'helpful';
     });

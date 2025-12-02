@@ -15,11 +15,18 @@
     <input type="hidden" name="age" value="{{ age }}">
     <input type="hidden" name="length" value="{{ length }}">
 
-    <label for="moral">Ponaučení:</label><br>
-    <input type="text" id="moral" name="moral" required><br><br>
+    <div class="form-group">
+        <label for="moral">Ponaučení:</label>
+        <input type="text" id="moral" name="moral" placeholder="Např. lež má krátké nohy" required>
+    </div>
 
-    <button type="submit">Další</button>
-    <button type="button" id="fillBtn">Předvyplnit</button>
+    <div class="button-row">
+        <div class="button-group-left">
+            <button type="button" class="btn-back" onclick="history.back()">← Zpět</button>
+            <button type="submit">Další ➝</button>
+        </div>
+        <button type="button" id="fillBtn" class="btn-prefill">Předvyplnit</button>
+    </div>
 
 </form>
 

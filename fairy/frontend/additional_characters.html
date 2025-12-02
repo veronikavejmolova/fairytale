@@ -8,7 +8,7 @@
 <body>
 <h1>🧚‍♀️ Přidej další postavy</h1>
 
-<p>Zde můžeš doplnit další postavy, které se objeví v pohádce (odděl čárkou nebo nový řádek).</p>
+<p>Zde můžeš doplnit další postavy, které se objeví v pohádce.</p>
 
 <form action="/supernatural" method="post">
 
@@ -16,16 +16,21 @@
     <input type="hidden" name="character" value="{{ character }}">
     <input type="hidden" name="length" value="{{ length }}">
     <input type="hidden" name="moral" value="{{ moral }}">
-    <input type="hidden" name="prompt" value="{{ prompt }}">
     <input type="hidden" name="age" value="{{ age }}">
 
+    <div class="form-group">
+        <label for="other_characters">Další postavy (odděl čárkou):</label>
+        <textarea id="other_characters" name="other_characters" rows="4"
+                  placeholder="Např. čaroděj, mluvící sova..."></textarea>
+    </div>
 
-    <label for="other_characters">Další postavy:</label><br>
-    <textarea id="other_characters" name="other_characters" rows="4"
-              placeholder="např. čaroděj, mluvící sova"></textarea><br><br>
-
-    <button type="submit">Další</button>
-    <button type="button" id="prefillChars">Předvyplnit</button>
+    <div class="button-row">
+        <div class="button-group-left">
+            <button type="button" class="btn-back" onclick="history.back()">← Zpět</button>
+            <button type="submit">Další ➝</button>
+        </div>
+        <button type="button" id="prefillChars" class="btn-prefill">Předvyplnit</button>
+    </div>
 </form>
 
 <script>
